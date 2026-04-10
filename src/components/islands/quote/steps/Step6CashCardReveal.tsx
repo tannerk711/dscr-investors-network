@@ -227,7 +227,7 @@ export function Step6CashCardReveal() {
           />
         </div>
 
-        <p className="mt-6 text-[11px] italic leading-snug text-gray-400">
+        <p className="mt-6 text-[11px] italic leading-snug text-gray-500">
           * {reveal.asterisk}
         </p>
       </motion.div>
