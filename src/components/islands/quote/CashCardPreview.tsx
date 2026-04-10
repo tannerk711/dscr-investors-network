@@ -2,26 +2,37 @@ import { useEffect, useRef, useState } from 'react';
 import { useStore } from '@nanostores/react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { cashCardStore, selectPreviewResult } from './store/cashCardStore';
-import { formatUsdKRange, formatUsdK, formatMonthly } from './format';
+import { formatUsdK, formatMonthly } from './format';
+import { useCountUp } from './useCountUp';
 
 /**
  * Sticky live preview bar at the top of the form.
  *
+ * Wave-4 update (Item #1): a LIVE RUNNING ballpark cash number tracks
+ * the user in real time as they answer Q2 (property value) and Q3 (loan
+ * balance), using the simplified ballpark formula
+ *   ballpark = max(0, propertyValue * 0.75 - currentBalance)
+ * and count-up easing via `useCountUp`. Once rent + FICO are set, the
+ * number locks onto the real cash-engine `cashMid` value (same shape,
+ * different source — so the transition is smooth).
+ *
  * Activation rules (master-build-plan §5):
  *   - Hidden until the user has answered Q2 (property value).
- *   - Shows "Calculating your Cash Card..." after Q2 with no balance/rent yet.
- *   - After Q3 (balance) and before Q4 (rent), shows a SOFT line:
- *       "Cash at close: ~$XXK (estimate sharpens with rent)"
- *     — never a final number, never a range, until Q4 pins rent.
- *   - After Q4 (rent), the bar flashes the "$1K/mo rent per $100K
- *     loan = breakeven" rule of thumb for 3 seconds, then fades out.
- *     Master plan §3A's teachable moment migrated INTO the form so the
- *     user sees it while staring at their OWN numbers.
- *   - On Q5 (FICO) the bar shows the FINAL number, not the preview default.
- *
- * The bar is intentionally hidden once the reveal screen is active —
- * the reveal IS the preview at full size, no need to double-render.
+ *   - Shows soft headline + live cash number the moment Q2 is set.
+ *   - After Q4 (rent) fires a 3s teachable-moment flash of the rule of
+ *     thumb, then fades.
+ *   - Bar is hidden on reveal / contact / success — the reveal screen
+ *     IS the preview at full size.
  */
+
+/** Simplified ballpark — matches the live-preview assumption of 75% LTV
+ *  at 720 FICO. The final reveal uses the real cash engine with fees.  */
+function ballpark(propertyValue: number | null, balance: number | null): number {
+  if (propertyValue === null || propertyValue <= 0) return 0;
+  const bal = balance ?? 0;
+  return Math.max(0, Math.round(propertyValue * 0.75 - bal));
+}
+
 export function CashCardPreview() {
   const state = useStore(cashCardStore);
   const prefersReduced = useReducedMotion() ?? false;
@@ -29,7 +40,6 @@ export function CashCardPreview() {
   const showBar =
     state.step !== 'state' &&
     state.step !== 'q1' &&
-    state.step !== 'q2' &&
     state.step !== 'reveal' &&
     state.step !== 'contact' &&
     state.step !== 'success';
@@ -52,40 +62,62 @@ export function CashCardPreview() {
     return () => window.clearTimeout(t);
   }, [hasRent, pastQ4]);
 
-  if (!showBar) return null;
-
+  // Live ballpark target — the number the count-up hook tweens to.
+  // While we have rent + FICO we pull the midpoint of the real cash-engine
+  // range so the displayed number is consistent with what the reveal will
+  // show. Otherwise we fall back to the simplified ballpark.
   const result = selectPreviewResult(state);
   const hasFico = state.ficoBracket !== null;
 
-  // Preview copy logic — softened per the master plan:
-  //
-  //   step=q3 (just set property value, no balance yet) → "Calculating…"
-  //   step=q4 (balance known, rent not yet)             → "~$XXK (estimate sharpens with rent)"
-  //   step=q5 (rent known, no FICO)                     → "Cash at close: $XXK-$XXK • cash flow sharpens with FICO"
-  //   step=q5 (FICO chosen before reveal nav)           → final line
-  //
-  // "~" prefix on the pre-rent number communicates roughness. A final
-  // locked number at this stage would lie to the user because the LTV
-  // cap and fee haircut haven't been applied against the real rent yet.
-  let cashLine = 'Calculating your Cash Card…';
-  let flowLine = '';
+  let liveTarget = ballpark(state.propertyValue, state.currentBalance);
+  let postRentBand = false;
+  if (result && result.hardKickout === null && hasRent) {
+    liveTarget = Math.max(
+      0,
+      Math.round((result.cashLow + result.cashHigh) / 2)
+    );
+    postRentBand = true;
+  }
+  const animatedCash = useCountUp(liveTarget, {
+    duration: 600,
+    delay: 0,
+    skip: prefersReduced,
+  });
 
-  if (result && result.hardKickout === null) {
-    if (result.grossCashOut <= 0) {
-      cashLine = 'No cash to pull at this LTV';
-    } else if (!hasRent) {
-      // Step q4 is about to ask for rent. Use the cash MIDPOINT with a ~
-      // so we don't lock a range before the rent moves the PITI math.
-      const midCash = (result.cashLow + result.cashHigh) / 2;
-      cashLine = `Cash at close: ~${formatUsdK(midCash)} (estimate sharpens with rent)`;
+  if (!showBar) return null;
+
+  // Headline copy — keep the master-plan softening but swap in the LIVE number.
+  //   q2 (property value being dragged): "Running ballpark: $XXK"
+  //   q3 (balance being dragged):          same line, updated mid-drag
+  //   q4 (rent being dragged):             "Cash at close: ~$XXK (sharpens with rent)"
+  //   q5 (FICO):                            "Cash at close: $XXK-$XXK"
+  let cashLine: string;
+  if (state.step === 'q2') {
+    cashLine = `Running ballpark: ${formatUsdK(animatedCash)}`;
+  } else if (state.step === 'q3') {
+    cashLine = `Running ballpark: ${formatUsdK(animatedCash)}`;
+  } else if (state.step === 'q4') {
+    cashLine = `Cash at close: ~${formatUsdK(animatedCash)} (sharpens with rent)`;
+  } else {
+    // q5 — we have rent; show soft range if no FICO, concrete if FICO set.
+    if (result && result.hardKickout === null) {
+      if (result.grossCashOut <= 0) {
+        cashLine = 'No cash to pull at this LTV';
+      } else if (hasFico) {
+        cashLine = `Cash at close: ${formatUsdK(result.cashLow)} – ${formatUsdK(result.cashHigh)}`;
+      } else {
+        cashLine = `Cash at close: ~${formatUsdK(animatedCash)} (sharpens with FICO)`;
+      }
     } else {
-      cashLine = `Cash at close: ${formatUsdKRange(result.cashLow, result.cashHigh)}`;
+      cashLine = `Cash at close: ~${formatUsdK(animatedCash)}`;
     }
-    if (hasRent) {
-      flowLine = hasFico
-        ? `Cash flow: ${formatMonthly(result.monthlyCashFlow)} • 15 business days`
-        : `Cash flow: ~${formatMonthly(result.monthlyCashFlow)} (sharpens with FICO)`;
-    }
+  }
+
+  let flowLine = '';
+  if (result && result.hardKickout === null && postRentBand) {
+    flowLine = hasFico
+      ? `Cash flow: ${formatMonthly(result.monthlyCashFlow)} • 15 business days`
+      : `Cash flow: ~${formatMonthly(result.monthlyCashFlow)} (sharpens with FICO)`;
   }
 
   const barTransition = prefersReduced
