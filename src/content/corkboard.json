@@ -1,0 +1,55 @@
+{
+  "headline": "The wire receipts corkboard.",
+  "subheadline": "Every pin is a real wire that hit a landlord's account. No names, no addresses — just the numbers we actually funded.",
+  "footnote": "Details anonymized. Dollar amounts, cash flow, and timelines are pulled straight from closed files.",
+  "receipts": [
+    {
+      "id": "WR-4418",
+      "propertyType": "SFR rental",
+      "cashOut": "$84,000",
+      "cashFlow": "$1,040/mo",
+      "daysToClose": "14 days",
+      "stamp": "FUNDED"
+    },
+    {
+      "id": "WR-4421",
+      "propertyType": "Duplex",
+      "cashOut": "$112,000",
+      "cashFlow": "$1,400/mo",
+      "daysToClose": "16 days",
+      "stamp": "FUNDED"
+    },
+    {
+      "id": "WR-4427",
+      "propertyType": "SFR rental",
+      "cashOut": "$58,000",
+      "cashFlow": "$890/mo",
+      "daysToClose": "13 days",
+      "stamp": "FUNDED"
+    },
+    {
+      "id": "WR-4432",
+      "propertyType": "4-plex",
+      "cashOut": "$168,000",
+      "cashFlow": "$2,150/mo",
+      "daysToClose": "19 days",
+      "stamp": "FUNDED"
+    },
+    {
+      "id": "WR-4436",
+      "propertyType": "Triplex",
+      "cashOut": "$121,000",
+      "cashFlow": "$1,580/mo",
+      "daysToClose": "17 days",
+      "stamp": "FUNDED"
+    },
+    {
+      "id": "WR-4440",
+      "propertyType": "STR cabin",
+      "cashOut": "$96,000",
+      "cashFlow": "$2,375/mo",
+      "daysToClose": "15 days",
+      "stamp": "FUNDED"
+    }
+  ]
+}

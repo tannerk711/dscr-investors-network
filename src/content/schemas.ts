@@ -130,24 +130,6 @@ export const CashEngineConfigSchema = z.object({
 });
 export type CashEngineConfig = z.infer<typeof CashEngineConfigSchema>;
 
-export const CaseStudiesSchema = z.object({
-  headline: z.string(),
-  studies: z
-    .array(
-      z.object({
-        firstName: z.string(),
-        city: z.string(),
-        state: z.string(),
-        propertyType: z.string(),
-        cashOut: z.string(),
-        monthlyCashFlow: z.string(),
-        daysToClose: z.string(),
-      })
-    )
-    .length(3),
-});
-export type CaseStudies = z.infer<typeof CaseStudiesSchema>;
-
 export const FaqSchema = z.object({
   headline: z.string(),
   items: z
@@ -241,6 +223,25 @@ export const FinalCtaSchema = z.object({
   ctaLabel: z.string(),
 });
 export type FinalCta = z.infer<typeof FinalCtaSchema>;
+
+export const CorkboardSchema = z.object({
+  headline: z.string().min(1),
+  subheadline: z.string().min(1),
+  footnote: z.string().min(1),
+  receipts: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        propertyType: z.string().min(1),
+        cashOut: z.string().min(1),
+        cashFlow: z.string().min(1),
+        daysToClose: z.string().min(1),
+        stamp: z.string().min(1),
+      })
+    )
+    .min(3),
+});
+export type Corkboard = z.infer<typeof CorkboardSchema>;
 
 export const FooterSchema = z.object({
   nmls: z.string(),

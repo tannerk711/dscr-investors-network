@@ -8,7 +8,6 @@
 import heroJson from './hero.json';
 import formStepsJson from './form-steps.json';
 import cashEngineConfigJson from './cash-engine-config.json';
-import caseStudiesJson from './case-studies.json';
 import faqJson from './faq.json';
 import exclusionsJson from './exclusions.json';
 import loBiosJson from './lo-bios.json';
@@ -18,12 +17,12 @@ import ruleOfThumbJson from './rule-of-thumb.json';
 import processJson from './process.json';
 import finalCtaJson from './final-cta.json';
 import footerJson from './footer.json';
+import corkboardJson from './corkboard.json';
 
 import {
   HeroSchema,
   FormStepsSchema,
   CashEngineConfigSchema,
-  CaseStudiesSchema,
   FaqSchema,
   ExclusionsSchema,
   LoBiosSchema,
@@ -33,12 +32,12 @@ import {
   ProcessSchema,
   FinalCtaSchema,
   FooterSchema,
+  CorkboardSchema,
 } from './schemas';
 
 export const hero = HeroSchema.parse(heroJson);
 export const formSteps = FormStepsSchema.parse(formStepsJson);
 export const cashEngineConfig = CashEngineConfigSchema.parse(cashEngineConfigJson);
-export const caseStudies = CaseStudiesSchema.parse(caseStudiesJson);
 export const faq = FaqSchema.parse(faqJson);
 export const exclusions = ExclusionsSchema.parse(exclusionsJson);
 export const loBios = LoBiosSchema.parse(loBiosJson);
@@ -48,3 +47,4 @@ export const ruleOfThumb = RuleOfThumbSchema.parse(ruleOfThumbJson);
 export const process = ProcessSchema.parse(processJson);
 export const finalCta = FinalCtaSchema.parse(finalCtaJson);
 export const footer = FooterSchema.parse(footerJson);
+export const corkboard = CorkboardSchema.parse(corkboardJson);

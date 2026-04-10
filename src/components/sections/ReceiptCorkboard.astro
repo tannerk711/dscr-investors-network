@@ -1,0 +1,181 @@
+---
+/**
+ * ReceiptCorkboard — Section 3B, replaces the old CaseStudies cards.
+ *
+ * A dark-stained corkboard with six wire-transfer receipts pinned to it
+ * at small random rotations. Each receipt is a tall card showing:
+ *   - A receipt ID ("WR-4418") as the header
+ *   - Property type (no state, no address, no name)
+ *   - Cash wired (the hero number)
+ *   - Monthly cash flow
+ *   - Days-to-close
+ *   - A diagonal "FUNDED" stamp
+ *
+ * Brand constraints honored:
+ *   - No customer names (Marcus → gone, Jessica → gone)
+ *   - No state counts, no "licensed in 10 states" language
+ *   - No city-state detail (was "Tampa FL", "Atlanta GA" in the old
+ *     CaseStudies — killed to match the Apr 9 brand direction memory)
+ *   - No rate, no DSCR ratio, no LTV percentage anywhere
+ *
+ * Receipts are styled as aged paper with a soft gradient + dashed top
+ * edge (the "tear"). Pins are tiny red circles at the top-center of
+ * each card. Rotations are deterministic per index so SSR and client
+ * hydration render identically.
+ */
+import { corkboard } from '../../content';
+
+// Deterministic tilts per index — hand-picked so no two adjacent
+// receipts lean the same way. Keeps SSR output stable (no Math.random).
+const TILTS = ['-3deg', '2.5deg', '-1.5deg', '3deg', '-2deg', '1.5deg'];
+---
+
+<section
+  id="receipt-corkboard"
+  class="relative overflow-hidden bg-ink py-16 md:py-24"
+  aria-label="Recent funded wire receipts"
+>
+  {/* Corkboard texture wash — a subtle warm-brown radial gradient
+      with noise-like dots for paper grain. Pure CSS, no image. */}
+  <div
+    class="pointer-events-none absolute inset-0 opacity-60"
+    aria-hidden="true"
+    style="background-image: radial-gradient(ellipse at 30% 20%, rgba(139, 90, 43, 0.18) 0%, transparent 55%), radial-gradient(ellipse at 80% 70%, rgba(184, 146, 42, 0.08) 0%, transparent 60%), radial-gradient(circle at 15% 80%, rgba(139, 90, 43, 0.12) 0%, transparent 40%);"
+  >
+  </div>
+
+  <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <p class="text-xs font-semibold uppercase tracking-widest text-gold">
+        The Corkboard
+      </p>
+      <h2 class="mt-3 text-3xl md:text-4xl font-bold text-white">
+        {corkboard.headline}
+      </h2>
+      <p class="mt-4 text-lg text-gray-300">
+        {corkboard.subheadline}
+      </p>
+    </div>
+
+    {/* The corkboard itself — receipts arranged in a flex wrap so they
+        tile naturally at any viewport width. On mobile they stack with
+        reduced rotation (cleaner reading angle). */}
+    <div
+      class="mt-14 flex flex-wrap items-start justify-center gap-6 md:gap-8"
+      role="list"
+    >
+      {
+        corkboard.receipts.map((r, i) => (
+          <article
+            role="listitem"
+            class="receipt relative w-64 shrink-0 origin-top rounded-sm bg-[#f7f1de] px-6 pb-6 pt-8 shadow-2xl transition-transform duration-200 hover:z-10 hover:-translate-y-1"
+            style={`transform: rotate(${TILTS[i % TILTS.length]}); box-shadow: 0 14px 30px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.3);`}
+          >
+            {/* Pin — a tiny red disc at the top-center of the receipt */}
+            <span
+              class="pointer-events-none absolute left-1/2 top-2 h-3 w-3 -translate-x-1/2 rounded-full"
+              aria-hidden="true"
+              style="background: radial-gradient(circle at 30% 30%, #ff6b5a 0%, #c0392b 60%, #7a1f12 100%); box-shadow: 0 1px 3px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.4);"
+            />
+
+            {/* Torn top edge — a zigzag illusion via dashed border */}
+            <div
+              class="pointer-events-none absolute inset-x-0 top-0 h-1.5 border-t border-dashed border-gray-400/60"
+              aria-hidden="true"
+            />
+
+            {/* Header: WR-XXXX receipt ID */}
+            <div class="border-b border-dashed border-gray-400/50 pb-3">
+              <p class="text-[10px] font-semibold uppercase tracking-widest text-gray-500">
+                Wire receipt
+              </p>
+              <p class="font-mono text-sm font-bold tracking-wider text-gray-700">
+                {r.id}
+              </p>
+            </div>
+
+            {/* Property type — no names, no city */}
+            <div class="mt-4">
+              <p class="text-[10px] font-semibold uppercase tracking-widest text-gray-500">
+                Property
+              </p>
+              <p class="mt-0.5 text-base font-semibold text-gray-800">
+                {r.propertyType}
+              </p>
+            </div>
+
+            {/* Cash wired — the hero number */}
+            <div class="mt-4">
+              <p class="text-[10px] font-semibold uppercase tracking-widest text-gray-500">
+                Cash wired
+              </p>
+              <p class="mt-0.5 font-mono text-2xl font-extrabold tabular-nums text-green-700">
+                {r.cashOut}
+              </p>
+            </div>
+
+            {/* Cash flow */}
+            <div class="mt-3">
+              <p class="text-[10px] font-semibold uppercase tracking-widest text-gray-500">
+                Monthly cash flow
+              </p>
+              <p class="mt-0.5 font-mono text-base font-bold tabular-nums text-gray-800">
+                {r.cashFlow}
+              </p>
+            </div>
+
+            {/* Days to close */}
+            <div class="mt-3">
+              <p class="text-[10px] font-semibold uppercase tracking-widest text-gray-500">
+                Yes → wire
+              </p>
+              <p class="mt-0.5 font-mono text-base font-bold tabular-nums text-gray-800">
+                {r.daysToClose}
+              </p>
+            </div>
+
+            {/* FUNDED stamp — rotated, red, low-opacity overlay */}
+            <div
+              class="pointer-events-none absolute bottom-4 right-3"
+              aria-hidden="true"
+            >
+              <span
+                class="inline-block rounded-sm border-[3px] border-red-accent/70 px-2 py-0.5 font-mono text-xs font-extrabold uppercase tracking-widest text-red-accent/70"
+                style="transform: rotate(-12deg); letter-spacing: 0.15em;"
+              >
+                {r.stamp}
+              </span>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    {/* Footnote */}
+    <p class="mt-12 text-center text-xs italic text-gray-400">
+      {corkboard.footnote}
+    </p>
+  </div>
+</section>
+
+<style>
+  /* Lift a receipt on hover (small desktop affordance). The transform
+     composes with the inline rotate by using a CSS custom property
+     — but since the inline transform already sets rotate, we use
+     translateY only via the Tailwind hover class and let the rotate
+     stay inline. This keeps the base rotation stable. */
+
+  /* Reduce rotation on mobile for readability — the tilted receipts
+     still communicate "corkboard" without being awkward to read. */
+  @media (max-width: 639px) {
+    .receipt {
+      transform: rotate(0deg) !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .receipt {
+      transition: none;
+    }
+  }
+</style>
