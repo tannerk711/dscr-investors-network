@@ -7,41 +7,33 @@ import {
   cashCardStore,
   selectFinalResult,
 } from '../store/cashCardStore';
-import { useCountUp } from '../useCountUp';
-import { formatUsd, formatMonthly } from '../format';
 import { usePartialLead } from '../usePartialLead';
+import { DigitMorph } from '../DigitMorph';
 
 /**
  * Step 6 — The Cash Card reveal.
  *
+ * Wave-4 upgrade (Item #2): 3-part dramatic reveal.
+ *
+ *   Phase A — DRUMROLL (0 → 1800ms):
+ *     Card mounts with a gold shimmer skeleton + "calculating…" micro-text.
+ *     The real numbers are hidden behind the skeleton. This is the "pause
+ *     before the magic" — users feel the work happening.
+ *
+ *   Phase B — DIGIT MORPH (1800 → 2400ms):
+ *     Skeleton fades. The cash-at-close midpoint runs through DigitMorph
+ *     right-to-left with 60ms stagger per digit + 2px overshoot bounce.
+ *     400ms later, the cash-flow number morphs left-to-right.
+ *
+ *   Phase C — TIMELINE DRAW (2400 → 3000ms):
+ *     An SVG "15 business days" timeline line draws on via stroke-dasharray
+ *     over 600ms. Once settled, the CTA is interactive.
+ *
+ * Total choreography: ~3.0s. Reduced-motion short-circuits every piece —
+ * skeleton is skipped, numbers render instantly, timeline draws in one frame.
+ *
  * The CTA is "Lock My Cash Card", not "submit" or "get quote". The
- * reveal MUST appear BEFORE the contact step (master-build-plan §5),
- * which is why this component lives between Q5 and the contact form.
- *
- * Motion choreography (Wave 3 polish pass):
- *   t = 0ms     → card scale-in from 0.96 → 1.0 and float from y:8 → 0
- *                 over 400ms ease-out. Feels like the card snaps into place.
- *   t = 0ms     → cash range counters start ramping 0 → target over 1200ms
- *                 (ease-out-expo in useCountUp — slot-machine landing).
- *   t = 1200ms  → cash range locks, 200ms beat.
- *   t = 1400ms  → cash flow counter ramps 0 → target over 1200ms.
- *   t = 2600ms  → cash flow locks, gold border pulses ONCE (~600ms)
- *                 to signal "done, locked in."
- *
- * The 15-business-days line is static — it's never a number to animate.
- *
- * Reduced motion: `useReducedMotion()` short-circuits every piece.
- * Counters jump straight to their target, the card fades instead of
- * scaling/floating, and the pulse is skipped entirely.
- *
- * Edge cases handled inline:
- *  - Hard kickout (FICO < 580 / value < $200K): show kickout copy + a
- *    soft route back. The form should never reach here for these,
- *    but be defensive.
- *  - Negative gross cash out: explain "no cash to pull at this LTV".
- *  - Negative cash flow: still show the cash number, but flag with
- *    "Tight cash flow — your LO can run interest-only options."
- *  - Low cash out (<$10K): swap headline.
+ * reveal MUST appear BEFORE the contact step (master-build-plan §5).
  */
 export function Step6CashCardReveal() {
   const state = useStore(cashCardStore);
@@ -53,9 +45,28 @@ export function Step6CashCardReveal() {
   // 60 seconds without advancing to contact. Exactly-once per session.
   usePartialLead();
 
-  // Controls the one-shot gold-border pulse. Fires after the cash-flow
-  // counter settles. Never repeats.
+  // Drumroll / reveal state machine.
+  const DRUMROLL_MS = prefersReduced ? 0 : 1800;
+  const MORPH_DELAY_CASH = prefersReduced ? 0 : DRUMROLL_MS;
+  const MORPH_DELAY_FLOW = prefersReduced ? 0 : DRUMROLL_MS + 400;
+  const TIMELINE_DELAY = prefersReduced ? 0 : DRUMROLL_MS + 800;
+
+  const [drumrollDone, setDrumrollDone] = useState(prefersReduced);
   const [pulseLocked, setPulseLocked] = useState(false);
+
+  useEffect(() => {
+    if (prefersReduced) {
+      setDrumrollDone(true);
+      setPulseLocked(true);
+      return;
+    }
+    const t1 = window.setTimeout(() => setDrumrollDone(true), DRUMROLL_MS);
+    const t2 = window.setTimeout(() => setPulseLocked(true), DRUMROLL_MS + 1800);
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
+  }, [prefersReduced, DRUMROLL_MS]);
 
   // Defensive — should not happen because the form router only reaches
   // this step after Q5 is answered. But if it does, route back to Q5.
@@ -76,42 +87,18 @@ export function Step6CashCardReveal() {
     );
   }
 
-  // Pick safe targets for the count-up animation. Hard kickouts and zero
-  // cash-out cases collapse to "no cash" rather than animating to a
-  // negative number.
-  const cashTargetLow = Math.max(0, Math.round(result.cashLow));
-  const cashTargetHigh = Math.max(0, Math.round(result.cashHigh));
-  const cashFlowTarget = Math.round(result.monthlyCashFlow);
-
-  // Cash range counters run in parallel (low + high) at t=0.
-  const animatedLow = useCountUp(cashTargetLow, {
-    duration: 1200,
-    delay: 0,
-    skip: prefersReduced,
-  });
-  const animatedHigh = useCountUp(cashTargetHigh, {
-    duration: 1200,
-    delay: 0,
-    skip: prefersReduced,
-  });
-  // Cash flow counter starts AFTER the cash range settles (1200ms) plus a
-  // 200ms beat, so the user reads the cash number before the flow number
-  // starts moving. Sequential, not competing.
-  const animatedFlow = useCountUp(Math.abs(cashFlowTarget), {
-    duration: 1200,
-    delay: 1400,
-    skip: prefersReduced,
-  });
-
-  // Fire the one-shot pulse after the cash flow counter finishes its ramp
-  // (1400ms delay + 1200ms duration = 2600ms).
-  useEffect(() => {
-    if (prefersReduced) return;
-    const t = window.setTimeout(() => setPulseLocked(true), 2600);
-    return () => window.clearTimeout(t);
-  }, [prefersReduced]);
-
+  // Cash at close is displayed as the MIDPOINT of the engine range
+  // (rounded to nearest $1K) — the two-number slot-machine range from
+  // the Wave-3 pass was swapped for a single headline number in the
+  // digit-morph design so the drum fall lands crisply.
+  const cashMid = Math.max(
+    0,
+    Math.round((result.cashLow + result.cashHigh) / 2000) * 1000
+  );
+  const cashFlowTarget = Math.round(result.monthlyCashFlow / 10) * 10;
+  const flowAbs = Math.abs(cashFlowTarget);
   const flowSign = cashFlowTarget < 0 ? '-' : '';
+
   const tightFlow = result.edgeCases.includes('TIGHT_OR_NEGATIVE_CASH_FLOW');
   const lowCashOut = result.edgeCases.includes('LOW_CASH_OUT_UNDER_10K');
   const noCashOut = result.edgeCases.includes('NEGATIVE_OR_ZERO_CASH_OUT');
@@ -120,8 +107,6 @@ export function Step6CashCardReveal() {
     cashCardActions.next();
   }
 
-  // Card entrance animation — scale-in from 0.96 and float up 8px over
-  // 400ms. In reduced-motion mode we fade only, skipping scale + translate.
   const cardInitial = prefersReduced
     ? { opacity: 0 }
     : { opacity: 0, scale: 0.96, y: 8 };
@@ -157,54 +142,89 @@ export function Step6CashCardReveal() {
           pulseLocked ? 'cash-card--pulse border-gold' : 'border-navy'
         }`}
       >
-        {/* Cash at close */}
-        <div>
-          <p className="text-5xl font-extrabold tracking-tight text-navy tabular-nums md:text-6xl">
-            {noCashOut ? (
-              '—'
-            ) : (
-              <>
-                {formatUsd(animatedLow)}
-                <span className="text-2xl font-bold text-gray-400 md:text-3xl">
-                  {' '}–{' '}
-                </span>
-                {formatUsd(animatedHigh)}
-              </>
-            )}
-          </p>
+        {/* ========================================================
+              CASH AT CLOSE
+            ======================================================== */}
+        <div className="relative">
+          {!drumrollDone && !prefersReduced ? (
+            <SkeletonNumber size="lg" />
+          ) : noCashOut ? (
+            <p className="text-5xl font-extrabold tracking-tight text-navy tabular-nums md:text-6xl">
+              —
+            </p>
+          ) : (
+            <DigitMorph
+              value={cashMid}
+              prefix="$"
+              direction="rtl"
+              baseDelay={MORPH_DELAY_CASH}
+              staggerMs={60}
+              durationMs={700}
+              className="text-5xl font-extrabold tracking-tight text-navy md:text-6xl"
+              ariaLabel={`Cash at close: $${cashMid.toLocaleString('en-US')}`}
+            />
+          )}
           <p className="mt-2 text-sm font-medium text-gray-500">
-            {noCashOut
-              ? 'No cash to pull at this LTV — talk to your LO about options'
-              : lowCashOut
-                ? 'Modest cash-out — your LO can talk timing'
-                : reveal.cashLineLabel}
+            {!drumrollDone && !prefersReduced
+              ? 'calculating…'
+              : noCashOut
+                ? 'No cash to pull at this LTV — talk to your LO about options'
+                : lowCashOut
+                  ? 'Modest cash-out — your LO can talk timing'
+                  : reveal.cashLineLabel}
           </p>
         </div>
 
         <div className="my-6 h-px w-full bg-gray-200" />
 
-        {/* Cash flow */}
+        {/* ========================================================
+              CASH FLOW
+            ======================================================== */}
         <div>
-          <p
-            className={`text-3xl font-extrabold tracking-tight tabular-nums md:text-4xl ${
-              tightFlow ? 'text-red-accent' : 'text-success'
-            }`}
-          >
-            {flowSign}
-            {formatMonthly(animatedFlow)}
-          </p>
+          {!drumrollDone && !prefersReduced ? (
+            <SkeletonNumber size="md" />
+          ) : (
+            <div
+              className={`inline-flex items-baseline text-3xl font-extrabold tracking-tight md:text-4xl ${
+                tightFlow ? 'text-red-accent' : 'text-success'
+              }`}
+            >
+              {flowSign && <span className="mr-0.5">{flowSign}</span>}
+              <DigitMorph
+                value={flowAbs}
+                prefix="$"
+                suffix="/mo"
+                direction="ltr"
+                baseDelay={MORPH_DELAY_FLOW}
+                staggerMs={60}
+                durationMs={700}
+                className=""
+                ariaLabel={`Monthly cash flow: ${flowSign}$${flowAbs.toLocaleString(
+                  'en-US'
+                )} per month`}
+              />
+            </div>
+          )}
           <p className="mt-1 text-sm font-medium text-gray-500">
-            {tightFlow
-              ? 'Tight cash flow — your LO can run interest-only options'
-              : reveal.cashFlowLineLabel}
+            {!drumrollDone && !prefersReduced
+              ? ' '
+              : tightFlow
+                ? 'Tight cash flow — your LO can run interest-only options'
+                : reveal.cashFlowLineLabel}
           </p>
         </div>
 
         <div className="my-6 h-px w-full bg-gray-200" />
 
-        {/* Timeline — static, never animates */}
+        {/* ========================================================
+              TIMELINE — SVG draw-on
+            ======================================================== */}
         <div>
-          <p className="text-base font-bold text-ink">{reveal.timelineLine}</p>
+          <TimelineDraw
+            label={reveal.timelineLine}
+            delayMs={TIMELINE_DELAY}
+            prefersReduced={prefersReduced}
+          />
         </div>
 
         <p className="mt-6 text-[11px] italic leading-snug text-gray-400">
@@ -221,5 +241,93 @@ export function Step6CashCardReveal() {
         <span aria-hidden="true">→</span>
       </button>
     </motion.div>
+  );
+}
+
+/* ==============================================================
+     SkeletonNumber — drumroll shimmer block while calculating.
+   ============================================================== */
+function SkeletonNumber({ size }: { size: 'lg' | 'md' }) {
+  const height = size === 'lg' ? 'h-14 md:h-16' : 'h-10 md:h-12';
+  const width = size === 'lg' ? 'w-60 md:w-72' : 'w-40 md:w-48';
+  return (
+    <div
+      className={`drumroll-shimmer mx-auto ${height} ${width} rounded-lg bg-gray-100`}
+      aria-hidden="true"
+    />
+  );
+}
+
+/* ==============================================================
+     TimelineDraw — SVG stroke-dasharray draw-on for the timeline line.
+   ============================================================== */
+function TimelineDraw({
+  label,
+  delayMs,
+  prefersReduced,
+}: {
+  label: string;
+  delayMs: number;
+  prefersReduced: boolean;
+}) {
+  const [visible, setVisible] = useState(prefersReduced);
+
+  useEffect(() => {
+    if (prefersReduced) {
+      setVisible(true);
+      return;
+    }
+    const t = window.setTimeout(() => setVisible(true), delayMs);
+    return () => window.clearTimeout(t);
+  }, [delayMs, prefersReduced]);
+
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <svg
+        viewBox="0 0 260 12"
+        className="h-3 w-full max-w-xs"
+        fill="none"
+        aria-hidden="true"
+      >
+        <motion.line
+          x1="4"
+          y1="6"
+          x2="256"
+          y2="6"
+          stroke="#B8922A"
+          strokeWidth="3"
+          strokeLinecap="round"
+          initial={{ pathLength: prefersReduced ? 1 : 0 }}
+          animate={{ pathLength: visible ? 1 : 0 }}
+          transition={{ duration: prefersReduced ? 0 : 0.6, ease: 'easeOut' }}
+        />
+        <motion.circle
+          cx="4"
+          cy="6"
+          r="4"
+          fill="#B8922A"
+          initial={{ opacity: prefersReduced ? 1 : 0 }}
+          animate={{ opacity: visible ? 1 : 0 }}
+          transition={{ duration: 0.2, delay: prefersReduced ? 0 : 0.1 }}
+        />
+        <motion.circle
+          cx="256"
+          cy="6"
+          r="4"
+          fill="#B8922A"
+          initial={{ opacity: prefersReduced ? 1 : 0 }}
+          animate={{ opacity: visible ? 1 : 0 }}
+          transition={{ duration: 0.2, delay: prefersReduced ? 0 : 0.6 }}
+        />
+      </svg>
+      <motion.p
+        className="text-base font-bold text-ink"
+        initial={{ opacity: prefersReduced ? 1 : 0 }}
+        animate={{ opacity: visible ? 1 : 0 }}
+        transition={{ duration: 0.3, delay: prefersReduced ? 0 : 0.3 }}
+      >
+        {label}
+      </motion.p>
+    </div>
   );
 }

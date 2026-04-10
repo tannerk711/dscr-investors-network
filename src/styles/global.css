@@ -128,6 +128,41 @@ body {
 }
 
 /* ----------------------------------------------------------------------
+ * Drumroll shimmer — skeleton block for the Cash Card reveal while the
+ * 1.8s "calculating…" pause runs. A gold gradient sweeps left to right
+ * across a muted gray block. Fires only when `.drumroll-shimmer` is
+ * mounted (the JSX unmounts it once numbers appear).
+ * -------------------------------------------------------------------- */
+@keyframes drumrollShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.drumroll-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    rgba(184, 146, 42, 0.08) 0%,
+    rgba(184, 146, 42, 0.35) 50%,
+    rgba(184, 146, 42, 0.08) 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  background-color: var(--color-gray-100);
+  animation: drumrollShimmer 1.2s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drumroll-shimmer {
+    animation: none;
+    background-image: none;
+  }
+}
+
+/* ----------------------------------------------------------------------
  * CurrencySlider — haptic-feeling thumb scale-up on drag/focus.
  *
  * Native range input thumbs need vendor-prefixed styling. We scale the
