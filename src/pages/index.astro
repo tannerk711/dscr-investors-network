@@ -12,6 +12,8 @@ import FAQ from '../components/sections/FAQ.astro';
 import FinalCTA from '../components/sections/FinalCTA.astro';
 import Footer from '../components/sections/Footer.astro';
 import CashCardForm from '../components/islands/quote/CashCardForm';
+import { StickyMobileCTA } from '../components/islands/nav/StickyMobileCTA';
+import { hero } from '../content';
 ---
 
 <BaseLayout title="DSCR Investors Network. How much cash can your rental pull?">
@@ -33,4 +35,5 @@ import CashCardForm from '../components/islands/quote/CashCardForm';
   <FAQ />
   <FinalCTA />
   <Footer />
+  <StickyMobileCTA client:load label={`${hero.ctaLabel} →`} />
 </BaseLayout>
