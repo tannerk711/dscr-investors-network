@@ -13,10 +13,12 @@ import FinalCTA from '../components/sections/FinalCTA.astro';
 import Footer from '../components/sections/Footer.astro';
 import CashCardForm from '../components/islands/quote/CashCardForm';
 import { StickyMobileCTA } from '../components/islands/nav/StickyMobileCTA';
+import { ScrollProgress } from '../components/islands/nav/ScrollProgress';
 import { hero } from '../content';
 ---
 
 <BaseLayout title="DSCR Investors Network. How much cash can your rental pull?">
+  <ScrollProgress client:load />
   <Header />
   <Hero />
   <FundedTicker />
