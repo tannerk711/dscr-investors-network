@@ -1,0 +1,32 @@
+{
+  "headline": "Three landlords. Three checks. Last 30 days.",
+  "studies": [
+    {
+      "firstName": "TODO_CLIENT",
+      "city": "TODO_CLIENT",
+      "state": "TODO_CLIENT",
+      "propertyType": "TODO_CLIENT",
+      "cashOut": "TODO_CLIENT",
+      "monthlyCashFlow": "TODO_CLIENT",
+      "daysToClose": "TODO_CLIENT"
+    },
+    {
+      "firstName": "TODO_CLIENT",
+      "city": "TODO_CLIENT",
+      "state": "TODO_CLIENT",
+      "propertyType": "TODO_CLIENT",
+      "cashOut": "TODO_CLIENT",
+      "monthlyCashFlow": "TODO_CLIENT",
+      "daysToClose": "TODO_CLIENT"
+    },
+    {
+      "firstName": "TODO_CLIENT",
+      "city": "TODO_CLIENT",
+      "state": "TODO_CLIENT",
+      "propertyType": "TODO_CLIENT",
+      "cashOut": "TODO_CLIENT",
+      "monthlyCashFlow": "TODO_CLIENT",
+      "daysToClose": "TODO_CLIENT"
+    }
+  ]
+}

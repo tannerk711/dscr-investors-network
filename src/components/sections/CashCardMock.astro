@@ -1,0 +1,96 @@
+---
+/**
+ * CashCardMock — static visual decoy shown in the hero.
+ * NOT the real reveal screen. Just the gold-bordered card that sells the promise.
+ * Content comes from hero.mockCard (validated by Zod upstream).
+ */
+import { hero } from '../../content';
+
+const { cashAtClose, cashFlow, timeline } = hero.mockCard;
+---
+
+<div
+  class="relative overflow-hidden rounded-2xl border-2 border-gold bg-white p-8 shadow-xl"
+  aria-hidden="true"
+>
+  {/* Giant $ watermark */}
+  <span
+    class="pointer-events-none absolute -right-6 -bottom-10 select-none text-[12rem] font-extrabold leading-none text-gold opacity-[0.06]"
+  >
+    $
+  </span>
+
+  {/* Pulsing $ icon in the corner */}
+  <div class="absolute top-6 right-6">
+    <div
+      class="cash-pulse flex h-10 w-10 items-center justify-center rounded-full bg-gold/10 text-gold"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="12" y1="2" x2="12" y2="22"></line>
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+      </svg>
+    </div>
+  </div>
+
+  {/* Top label */}
+  <p
+    class="relative text-xs font-semibold uppercase tracking-widest text-gold"
+  >
+    Your Cash Card
+  </p>
+
+  {/* Number 1: cash at close */}
+  <div class="relative mt-6">
+    <p class="tabular-nums text-3xl font-bold leading-tight text-ink md:text-4xl">
+      {cashAtClose}
+    </p>
+    <p class="mt-1 text-sm text-gray-500">cash at close</p>
+  </div>
+
+  {/* Number 2: monthly cash flow */}
+  <div class="relative mt-6">
+    <p class="tabular-nums text-2xl font-bold text-success">
+      {cashFlow}
+    </p>
+    <p class="mt-1 text-sm text-gray-500">monthly cash flow</p>
+  </div>
+
+  {/* Number 3: timeline */}
+  <div class="relative mt-6">
+    <p class="text-xl font-semibold text-ink">
+      {timeline}
+    </p>
+    <p class="mt-1 text-sm text-gray-500">yes to wired</p>
+  </div>
+</div>
+
+<style>
+  @keyframes cash-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  .cash-pulse {
+    animation: cash-pulse 2s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cash-pulse {
+      animation: none;
+    }
+  }
+</style>

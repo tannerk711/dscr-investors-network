@@ -1,0 +1,24 @@
+{
+  "webhookUrl": "TODO_CLIENT",
+  "fields": {
+    "firstName": "string",
+    "phone": "string",
+    "email": "string",
+    "propertyAddress": "string",
+    "state": "string",
+    "propertyType": "string",
+    "propertyValue": "number",
+    "currentBalance": "number",
+    "monthlyRent": "number",
+    "ficoBracket": "string",
+    "calculatedCashLow": "number",
+    "calculatedCashHigh": "number",
+    "calculatedCashFlowLow": "number",
+    "calculatedCashFlowHigh": "number",
+    "utmSource": "string",
+    "utmCampaign": "string",
+    "fbclid": "string",
+    "landingPageVariant": "string",
+    "submittedAt": "string"
+  }
+}

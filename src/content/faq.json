@@ -1,0 +1,37 @@
+{
+  "headline": "Questions, answered straight.",
+  "items": [
+    {
+      "q": "Do you pull credit?",
+      "a": "Not until you ask us to. The 4-question form is a self-reported estimate — no hard pull."
+    },
+    {
+      "q": "Do I need tax returns?",
+      "a": "No. We use the rental income, not your personal income. That's what DSCR means."
+    },
+    {
+      "q": "Can I close in my LLC?",
+      "a": "Yes. Most of our clients do."
+    },
+    {
+      "q": "What's the minimum FICO?",
+      "a": "580 at 50% LTV. Most clients are 680+. Below 580 is rare."
+    },
+    {
+      "q": "How long does it take to close?",
+      "a": "~15 business days from submission to wire on a typical clean file."
+    },
+    {
+      "q": "Is there a prepayment penalty?",
+      "a": "Yes, standard 5/4/3/2/1. Other structures available — ask your LO."
+    },
+    {
+      "q": "Can I use this for a short-term rental?",
+      "a": "Yes. We use your trailing 12-month gross revenue."
+    },
+    {
+      "q": "What states do you fund loans in?",
+      "a": "We actively fund DSCR loans across most of the U.S. Start the 4 questions and we'll confirm coverage for your state before we price anything."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "headline": "What happens in the next 15 business days.",
+  "subheadline": "No mystery. No 47-step application. Here's the whole thing.",
+  "steps": [
+    {
+      "n": 1,
+      "title": "You finish the 4 questions",
+      "body": "Salesforce gets your file with everything Ann needs to price it."
+    },
+    {
+      "n": 2,
+      "title": "Salesforce auto-texts you",
+      "body": "Your assigned Platinum loan officer's name and direct number — usually within 60 seconds."
+    },
+    {
+      "n": 3,
+      "title": "Your LO calls you within 2 business hours",
+      "body": "To confirm your real numbers. No robocalls, no Calendly gauntlet, no call center."
+    },
+    {
+      "n": 4,
+      "title": "If you move forward, you close in ~15 business days",
+      "body": "And the wire hits your account."
+    }
+  ]
+}

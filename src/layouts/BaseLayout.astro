@@ -1,0 +1,78 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'How much cash can your rental pull? 4 questions. Real number. 15 business days from yes to wired.' } = Astro.props;
+
+/**
+ * W3-J: Meta Pixel ID is read from the PUBLIC_META_PIXEL_ID env var so
+ * the client bundle can reference it. When unset (or left as the
+ * TODO_CLIENT placeholder), we render a boot stub that logs a warning
+ * and no-ops every fbq call — this keeps `firePixelEvent` safe on
+ * preview builds and Lighthouse runs without shipping a real pixel.
+ */
+const rawPixelId = import.meta.env.PUBLIC_META_PIXEL_ID;
+const metaPixelId =
+  typeof rawPixelId === 'string' && rawPixelId && rawPixelId !== 'TODO_CLIENT'
+    ? rawPixelId
+    : null;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#1B2E4B" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+
+    {/* W3-J: Meta Pixel base code. Always injects a stub so firePixelEvent
+        is safe to call; only loads the real fbevents.js when PUBLIC_META_PIXEL_ID
+        is a non-placeholder string. Honors the ?disable_pixel=1 QA hatch. */}
+    {metaPixelId ? (
+      <script is:inline define:vars={{ metaPixelId }}>
+        {`(function() {
+          try {
+            var params = new URLSearchParams(window.location.search);
+            if (params.get('disable_pixel') === '1') {
+              window.__dscrinPixelDisabled = true;
+              window.fbq = function() {};
+              return;
+            }
+          } catch (e) { /* ignore */ }
+          !function(f,b,e,v,n,t,s)
+          {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+          if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+          n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)}(window,document,'script',
+          'https://connect.facebook.net/en_US/fbevents.js');
+          window.fbq('init', metaPixelId);
+          window.fbq('track', 'PageView');
+        })();`}
+      </script>
+    ) : (
+      <script is:inline>
+        {`console.warn('[dscrin] PUBLIC_META_PIXEL_ID not set — Meta Pixel disabled. Set it in .env to enable client-side tracking.');
+          window.fbq = function() {};
+          window.__dscrinPixelDisabled = true;`}
+      </script>
+    )}
+  </head>
+  <body class="bg-white text-ink antialiased">
+    <slot />
+  </body>
+</html>

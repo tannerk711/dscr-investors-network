@@ -1,0 +1,19 @@
+{
+  "headline": "The people who actually look at your file.",
+  "people": [
+    {
+      "name": "Our Founder",
+      "role": "DSCR Investors Network",
+      "bio": "20+ years in investor lending. Reviews every file personally.",
+      "quote": "I built this for landlords because I am one. The rate doesn't matter — what matters is whether you walk away cash-flowing.",
+      "photoUrl": "TODO_CLIENT"
+    },
+    {
+      "name": "Senior Processing Team",
+      "role": "DSCR Investors Network",
+      "bio": "Runs every file through 4-5 pricing engines and 7 wholesale lenders to find the best terms.",
+      "quote": "Tell us everything up front. The more we know, the harder we can fight for your number.",
+      "photoUrl": "TODO_CLIENT"
+    }
+  ]
+}

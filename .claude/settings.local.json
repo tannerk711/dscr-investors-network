@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit",
+      "Write",
+      "Read",
+      "Glob",
+      "Grep",
+      "Bash(*)",
+      "NotebookEdit",
+      "Agent",
+      "WebFetch",
+      "WebSearch",
+      "mcp__firecrawl__*",
+      "mcp__fal-ai__*"
+    ]
+  }
+}

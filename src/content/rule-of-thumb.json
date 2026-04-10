@@ -1,0 +1,21 @@
+{
+  "headline": "The rule serious landlords use to size up a deal in 10 seconds.",
+  "subheadline": "Every $100,000 you borrow needs about $1,000 a month in rent to break even. Anything above that is profit in your pocket. It's the same math we run on every file before we ever open the loan estimate.",
+  "examples": [
+    {
+      "loan": 300000,
+      "rent": 3000,
+      "result": "breakeven (rent covers PITI)"
+    },
+    {
+      "loan": 300000,
+      "rent": 4000,
+      "result": "$1,000/mo cash flow"
+    },
+    {
+      "loan": 400000,
+      "rent": 3000,
+      "result": "-$1,000/mo (this is why we kick out under-rented properties)"
+    }
+  ]
+}

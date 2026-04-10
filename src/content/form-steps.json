@@ -1,0 +1,83 @@
+{
+  "stateGate": {
+    "headline": "First — what state is your rental in?",
+    "states": [
+      { "code": "TX", "label": "Texas" },
+      { "code": "FL", "label": "Florida" },
+      { "code": "GA", "label": "Georgia" },
+      { "code": "TN", "label": "Tennessee" },
+      { "code": "NC", "label": "North Carolina" },
+      { "code": "IN", "label": "Indiana" },
+      { "code": "TODO_CLIENT_STATE_7", "label": "TODO_CLIENT" },
+      { "code": "TODO_CLIENT_STATE_8", "label": "TODO_CLIENT" },
+      { "code": "TODO_CLIENT_STATE_9", "label": "TODO_CLIENT" },
+      { "code": "TODO_CLIENT_STATE_10", "label": "TODO_CLIENT" }
+    ],
+    "offStateExitCopy": "We're not funding deals in your state right now — drop your email and we'll let you know when we open it up."
+  },
+  "q1PropertyType": {
+    "headline": "What kind of property is it?",
+    "options": [
+      { "id": "sfr", "label": "Single-family rental", "icon": "home" },
+      { "id": "multi", "label": "2-4 unit (duplex/triplex/4-plex)", "icon": "buildings" },
+      { "id": "condo", "label": "Condo", "icon": "condo" },
+      { "id": "str", "label": "Short-term rental (Airbnb/VRBO)", "icon": "key" }
+    ],
+    "otherKickoutCopy": "Modular, mobile, or 5+ acres? We don't lend on those — drop your email and we'll let you know when we have options."
+  },
+  "q2PropertyValue": {
+    "headline": "What's it worth today?",
+    "min": 200000,
+    "max": 2000000,
+    "step": 25000,
+    "default": 400000,
+    "minTooltip": "Min property value: $200K — anything smaller and the math doesn't work.",
+    "helperHint": "Most investors in your state are $300K-$500K"
+  },
+  "q3LoanBalance": {
+    "headline": "What do you still owe on it?",
+    "step": 10000,
+    "default": 200000,
+    "freeAndClearCopy": "Own it free and clear? Drag to $0."
+  },
+  "q4MonthlyRent": {
+    "headline": "What does it rent for per month?",
+    "min": 500,
+    "max": 10000,
+    "step": 100,
+    "default": 4000,
+    "strHeadline": "What's your trailing 12-month gross revenue?",
+    "strHint": "(divide by 12 for the monthly equivalent)"
+  },
+  "q5Fico": {
+    "headline": "Roughly, where's your credit score?",
+    "microcopy": "This is self-reported. We don't pull credit until you ask us to.",
+    "brackets": [
+      { "id": "740plus", "label": "740+", "sublabel": "Excellent", "midpoint": 760 },
+      { "id": "700to739", "label": "700-739", "sublabel": "Great", "midpoint": 720 },
+      { "id": "660to699", "label": "660-699", "sublabel": "Good", "midpoint": 680 },
+      { "id": "620to659", "label": "620-659", "sublabel": "Fair", "midpoint": 640 },
+      { "id": "below620", "label": "Below 620", "sublabel": "", "midpoint": 600 }
+    ],
+    "below620KickoutCopy": "We can sometimes help below 620 at lower LTV — drop your info and our team will reach out personally."
+  },
+  "reveal": {
+    "headline": "Your Cash Card",
+    "cashLineLabel": "cash in your pocket at close",
+    "cashFlowLineLabel": "new cash flow after the loan",
+    "timelineLine": "~15 business days from yes to wired",
+    "asterisk": "After typical closing fees. Final number depends on appraisal and title.",
+    "ctaLabel": "Lock My Cash Card"
+  },
+  "contact": {
+    "headline": "Where should we send your locked Cash Card?",
+    "fields": {
+      "firstName": "First name",
+      "phone": "Mobile phone",
+      "email": "Email",
+      "address": "Property address"
+    },
+    "microcopy": "A real loan officer from our team will text you within 2 business hours with your locked numbers. No dialer. No robocalls. No spam.",
+    "submitLabel": "Send My Cash Card"
+  }
+}

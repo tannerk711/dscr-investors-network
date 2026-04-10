@@ -1,0 +1,99 @@
+---
+/**
+ * Footer — navy-dark, 3 columns on desktop, stacked on mobile.
+ * Renders TODO_CLIENT placeholders visually as [TODO_CLIENT] so gaps are obvious in preview.
+ * NO phone number (no dialer exists).
+ */
+import { footer } from '../../content';
+
+const TODO_TOKEN = 'TODO_CLIENT';
+const renderToken = (value: string) =>
+  value === TODO_TOKEN ? '[TODO_CLIENT]' : value;
+
+// Replace any inline TODO_CLIENT occurrences inside the compliance string.
+const complianceText = footer.compliance.replaceAll(
+  TODO_TOKEN,
+  '[TODO_CLIENT]'
+);
+const nmlsLine = `NMLS #${renderToken(footer.nmls)}`;
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-navy-dark py-12 text-gray-300">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    {/* 3-column grid */}
+    <div class="grid gap-10 md:grid-cols-3 md:items-start">
+      {/* Col 1: Brand + tagline */}
+      <div>
+        <img
+          src="/logo.png"
+          alt="DSCR Investors Network"
+          width="280"
+          height="120"
+          class="h-14 w-auto rounded-lg bg-white p-2"
+        />
+        <p class="mt-4 text-sm leading-relaxed text-gray-300">
+          Cash-out refis for landlords. Your rent qualifies the loan.
+        </p>
+      </div>
+
+      {/* Col 2: Contact */}
+      <div>
+        <p
+          class="text-xs font-semibold uppercase tracking-widest text-white"
+        >
+          Contact
+        </p>
+        <p class="mt-3 text-sm text-gray-300">
+          hello@dscrinvestors.net
+        </p>
+      </div>
+
+      {/* Col 3: Links */}
+      <div>
+        <p
+          class="text-xs font-semibold uppercase tracking-widest text-white"
+        >
+          Legal
+        </p>
+        <ul class="mt-3 space-y-2">
+          {
+            footer.links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-sm text-gray-300 transition-colors hover:text-white focus-visible:text-white"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    {/* Bottom row: NMLS + compliance + EHO */}
+    <div
+      class="mt-12 flex flex-col gap-4 border-t border-white/10 pt-8 text-xs leading-relaxed text-gray-400 md:flex-row md:items-start md:justify-between"
+    >
+      <div class="space-y-2 md:max-w-3xl">
+        <p>{nmlsLine}</p>
+        <p>{complianceText}</p>
+        <p>&copy; {currentYear} DSCR Investors Network. All rights reserved.</p>
+      </div>
+
+      {/* EHO wordmark (text-only v1) */}
+      <div
+        class="inline-flex items-center gap-2 rounded-lg border border-white/20 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-white"
+        aria-label="Equal Housing Opportunity"
+      >
+        <span aria-hidden="true">EHO</span>
+        <span class="font-normal normal-case tracking-normal text-gray-400">
+          Equal Housing Opportunity
+        </span>
+      </div>
+    </div>
+  </div>
+</footer>

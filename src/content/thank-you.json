@@ -1,0 +1,14 @@
+{
+  "headline": "You're locked in.",
+  "subheadline": "Your Platinum loan officer is being assigned now. Expect a text within the next few minutes from a [area code] number. They'll call you within 2 business hours (Mon-Fri 9am-6pm ET).",
+  "loPlaceholder": {
+    "name": "TODO_CLIENT",
+    "phone": "TODO_CLIENT",
+    "photoUrl": "TODO_CLIENT"
+  },
+  "fallbackEmailLine": "Want to reach out first? Email us at hello@dscrinvestors.net",
+  "emailTemplate": {
+    "subject": "Your DSCR Cash Card is locked",
+    "previewText": "Here's your Cash Card and what happens next."
+  }
+}

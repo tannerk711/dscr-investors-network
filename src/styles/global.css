@@ -1,0 +1,209 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand palette */
+  --color-navy: #1B2E4B;
+  --color-navy-light: #EEF2F7;
+  --color-navy-dark: #0D1A2B;
+  --color-ink: #0F1C2E;
+  --color-ink-light: #2A3F5A;
+  --color-red-accent: #C0392B;
+  --color-success: #2D7A4F;
+  --color-gold: #B8922A;
+  --color-white: #FFFFFF;
+  --color-off-white: #F4F6F9;
+
+  /* Neutrals */
+  --color-gray-100: #F0F2F5;
+  --color-gray-200: #D9DDE4;
+  --color-gray-300: #B0B8C4;
+  --color-gray-400: #8491A3;
+  --color-gray-500: #5C6A7A;
+  --color-gray-600: #3A4655;
+
+  /* Fonts */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Type scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+
+  /* Spacing */
+  --spacing-section: 6rem;
+  --spacing-section-mobile: 4rem;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+
+  /* Shadows using ink rgb(15, 28, 46) */
+  --shadow-sm: 0 1px 3px rgba(15, 28, 46, 0.10);
+  --shadow-md: 0 4px 12px rgba(15, 28, 46, 0.14);
+  --shadow-lg: 0 8px 24px rgba(15, 28, 46, 0.18);
+  --shadow-xl: 0 16px 40px rgba(15, 28, 46, 0.22);
+  --shadow-focus: 0 0 0 3px rgba(27, 46, 75, 0.30);
+  --shadow-inset: inset 0 1px 3px rgba(15, 28, 46, 0.12);
+
+  /* Easing */
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background-color: var(--color-white);
+  line-height: 1.7;
+}
+
+::selection {
+  background-color: var(--color-navy);
+  color: var(--color-white);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-navy);
+  outline-offset: 2px;
+}
+
+/* Tabular numerals on all numeric display */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ----------------------------------------------------------------------
+ * Cash Card reveal — one-shot gold border pulse after numbers lock in.
+ * Fires once (animation-iteration-count: 1), forwards fill so the border
+ * settles on its final gold state instead of snapping back to navy.
+ * -------------------------------------------------------------------- */
+@keyframes cashCardPulse {
+  0% {
+    box-shadow:
+      0 16px 40px rgba(15, 28, 46, 0.22),
+      0 0 0 0 rgba(184, 146, 42, 0.55);
+  }
+  40% {
+    box-shadow:
+      0 16px 40px rgba(15, 28, 46, 0.22),
+      0 0 0 12px rgba(184, 146, 42, 0.18);
+  }
+  100% {
+    box-shadow:
+      0 16px 40px rgba(15, 28, 46, 0.22),
+      0 0 0 0 rgba(184, 146, 42, 0);
+  }
+}
+
+.cash-card {
+  transition: border-color 240ms var(--ease-out);
+}
+
+.cash-card--pulse {
+  animation: cashCardPulse 600ms var(--ease-out) 1 forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cash-card--pulse {
+    animation: none;
+  }
+}
+
+/* ----------------------------------------------------------------------
+ * CurrencySlider — haptic-feeling thumb scale-up on drag/focus.
+ *
+ * Native range input thumbs need vendor-prefixed styling. We scale the
+ * thumb to 1.15 while the track is actively being dragged (:active)
+ * or the input is focused, and return to 1.0 on release. The nav-gradient
+ * fill on the left side of the thumb is painted via a background-image
+ * on the range input itself, driven by a CSS custom property the JSX
+ * sets inline (`--range-progress`).
+ * -------------------------------------------------------------------- */
+input[type='range'].cash-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 9999px;
+  background:
+    linear-gradient(
+      to right,
+      var(--color-navy) 0%,
+      var(--color-navy) var(--range-progress, 0%),
+      var(--color-gray-200) var(--range-progress, 0%),
+      var(--color-gray-200) 100%
+    );
+  outline: none;
+  cursor: pointer;
+}
+
+input[type='range'].cash-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  background: var(--color-navy);
+  border: 3px solid var(--color-white);
+  box-shadow: 0 2px 6px rgba(15, 28, 46, 0.25);
+  cursor: grab;
+  transition: transform 140ms var(--ease-out),
+    box-shadow 140ms var(--ease-out);
+}
+
+input[type='range'].cash-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  background: var(--color-navy);
+  border: 3px solid var(--color-white);
+  box-shadow: 0 2px 6px rgba(15, 28, 46, 0.25);
+  cursor: grab;
+  transition: transform 140ms var(--ease-out),
+    box-shadow 140ms var(--ease-out);
+}
+
+input[type='range'].cash-slider:active::-webkit-slider-thumb,
+input[type='range'].cash-slider:focus-visible::-webkit-slider-thumb {
+  transform: scale(1.15);
+  box-shadow: 0 4px 10px rgba(15, 28, 46, 0.35);
+  cursor: grabbing;
+}
+
+input[type='range'].cash-slider:active::-moz-range-thumb,
+input[type='range'].cash-slider:focus-visible::-moz-range-thumb {
+  transform: scale(1.15);
+  box-shadow: 0 4px 10px rgba(15, 28, 46, 0.35);
+  cursor: grabbing;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  input[type='range'].cash-slider::-webkit-slider-thumb,
+  input[type='range'].cash-slider::-moz-range-thumb {
+    transition: none;
+  }
+  input[type='range'].cash-slider:active::-webkit-slider-thumb,
+  input[type='range'].cash-slider:focus-visible::-webkit-slider-thumb,
+  input[type='range'].cash-slider:active::-moz-range-thumb,
+  input[type='range'].cash-slider:focus-visible::-moz-range-thumb {
+    transform: none;
+  }
+}

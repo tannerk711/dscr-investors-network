@@ -1,0 +1,39 @@
+---
+import { exclusions } from '../../content';
+---
+
+<section class="bg-white py-16 md:py-24">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <p class="text-xs font-semibold uppercase tracking-widest text-gray-500">
+      Who We Don't Lend To
+    </p>
+    <h2 class="mt-3 text-3xl md:text-4xl font-bold text-ink">
+      {exclusions.headline}
+    </h2>
+
+    <ul class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 text-left">
+      {
+        exclusions.items.map((item) => (
+          <li class="flex items-start gap-3">
+            <svg
+              class="mt-1 w-5 h-5 shrink-0 text-red-accent"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="5" y1="5" x2="15" y2="15" />
+              <line x1="15" y1="5" x2="5" y2="15" />
+            </svg>
+            <span class="text-base text-gray-600">{item}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="mt-10 text-sm text-gray-500">{exclusions.microcopy}</p>
+  </div>
+</section>
