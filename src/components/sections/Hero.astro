@@ -7,7 +7,7 @@
  * NO rate, NO DSCR ratio, NO LTV, NO stock photo, NO phone.
  */
 import { hero } from '../../content';
-import CashCardMock from './CashCardMock.astro';
+import { EquityScrubber } from '../islands/hero/EquityScrubber';
 ---
 
 <section
@@ -45,28 +45,11 @@ import CashCardMock from './CashCardMock.astro';
         </div>
       </div>
 
-      {/* RIGHT: CashCardMock with faint form decoy behind */}
+      {/* RIGHT: Interactive EquityScrubber — the centerpiece.
+          Replaces the static CashCardMock so the mechanic is discoverable
+          above the fold without any form fields. */}
       <div class="relative mt-4 md:mt-0">
-        {/* Faint form-question decoy behind the card */}
-        <div
-          class="pointer-events-none absolute inset-0 flex items-start justify-center pt-6 opacity-20 select-none"
-          aria-hidden="true"
-        >
-          <div class="w-full max-w-md rounded-2xl border border-white/20 bg-white/5 p-8 text-left">
-            <p class="text-xs font-semibold uppercase tracking-widest text-white">
-              Question 1 of 4
-            </p>
-            <p class="mt-4 text-2xl font-bold text-white">
-              What's it worth today?
-            </p>
-            <div class="mt-6 h-12 rounded-xl border border-white/30 bg-white/5"></div>
-          </div>
-        </div>
-
-        {/* The actual mock card, lifted above the decoy */}
-        <div class="relative">
-          <CashCardMock />
-        </div>
+        <EquityScrubber client:load />
       </div>
     </div>
 
