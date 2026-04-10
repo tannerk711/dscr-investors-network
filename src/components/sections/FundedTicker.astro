@@ -1,0 +1,98 @@
+---
+/**
+ * FundedTicker — 32px-tall horizontal marquee of recently funded deals.
+ *
+ * Pure CSS animation (no JS), duplicated content for seamless scroll.
+ * Pause on hover or focus-within. Hidden on viewport < 375px. Respects
+ * prefers-reduced-motion by freezing the scroll.
+ *
+ * Brand constraints honored:
+ *   - No state counts aggregated anywhere — each entry is a single deal
+ *   - No individual names, no "licensed" language
+ *   - Seed data covers 10 target states + a few adjacent for variety
+ */
+import deals from '../../content/recent-deals.json';
+
+// The list must be rendered twice, back-to-back, so the @keyframes
+// translateX(-50%) lands exactly where the first copy started, producing
+// a seamless loop with no visual jump.
+const entries = deals.deals;
+---
+
+<div
+  class="funded-ticker relative overflow-hidden border-y border-white/10 bg-ink text-gold"
+  role="marquee"
+  aria-label="Recently funded deals"
+>
+  <div class="funded-ticker-track flex items-center gap-8 whitespace-nowrap py-2">
+    {[...entries, ...entries].map((d, i) => (
+      <span class="inline-flex items-center gap-2 text-xs font-semibold tabular-nums sm:text-sm">
+        <span class="pulse-dot inline-block h-2 w-2 rounded-full bg-success" aria-hidden="true"></span>
+        <span>
+          <span class="text-white/90">{d.propertyType}</span>
+          <span class="mx-1 text-white/40">·</span>
+          <span class="text-gold">{d.cashOut}</span>
+          <span class="mx-1 text-white/40">·</span>
+          <span class="text-white/70">{d.daysToFund}</span>
+        </span>
+      </span>
+    ))}
+  </div>
+</div>
+
+<style>
+  @keyframes funded-scroll {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      /* Translate by half the total width of the duplicated track so the
+         second copy slides perfectly into where the first started. */
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  .funded-ticker-track {
+    /* The list renders twice so the scroll width is 2x; 40px/sec target
+       speed → ~30s per full cycle for a ~20-entry list. Tune here if the
+       list grows or shrinks. */
+    animation: funded-scroll 45s linear infinite;
+    will-change: transform;
+  }
+
+  .funded-ticker:hover .funded-ticker-track,
+  .funded-ticker:focus-within .funded-ticker-track {
+    animation-play-state: paused;
+  }
+
+  .pulse-dot {
+    box-shadow: 0 0 0 0 rgba(45, 122, 79, 0.55);
+    animation: pulse-dot 2.4s ease-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(45, 122, 79, 0.55);
+    }
+    50% {
+      box-shadow: 0 0 0 5px rgba(45, 122, 79, 0);
+    }
+  }
+
+  /* Hide on very small viewports — nothing below 375px. */
+  @media (max-width: 374px) {
+    .funded-ticker {
+      display: none;
+    }
+  }
+
+  /* Reduced motion — freeze the scroll AND the pulse. */
+  @media (prefers-reduced-motion: reduce) {
+    .funded-ticker-track {
+      animation: none;
+    }
+    .pulse-dot {
+      animation: none;
+    }
+  }
+</style>
