@@ -3,20 +3,25 @@ import { exclusions } from '../../content';
 ---
 
 <section class="bg-white py-16 md:py-24">
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <p class="text-xs font-semibold uppercase tracking-widest text-gray-500">
-      Who We Don't Lend To
-    </p>
-    <h2 class="mt-3 text-3xl md:text-4xl font-bold text-ink">
-      {exclusions.headline}
-    </h2>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-10 md:mb-14">
+      <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-red-accent/25 bg-red-accent/10 px-3 py-1">
+        <span class="inline-block h-2 w-2 rounded-full bg-red-accent"></span>
+        <span class="text-[11px] font-semibold uppercase tracking-widest text-red-accent">
+          Who We Don't Lend To
+        </span>
+      </div>
+      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-ink">
+        {exclusions.headline}
+      </h2>
+    </div>
 
-    <ul class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 text-left">
+    <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
       {
         exclusions.items.map((item) => (
-          <li class="flex items-start gap-3">
+          <li class="flex items-start gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-md">
             <svg
-              class="mt-1 w-5 h-5 shrink-0 text-red-accent"
+              class="mt-0.5 w-4 h-4 shrink-0 text-red-accent"
               viewBox="0 0 20 20"
               fill="none"
               stroke="currentColor"
@@ -28,12 +33,12 @@ import { exclusions } from '../../content';
               <line x1="5" y1="5" x2="15" y2="15" />
               <line x1="15" y1="5" x2="5" y2="15" />
             </svg>
-            <span class="text-base text-gray-600">{item}</span>
+            <span class="text-sm leading-snug text-gray-600">{item}</span>
           </li>
         ))
       }
     </ul>
 
-    <p class="mt-10 text-sm text-gray-500">{exclusions.microcopy}</p>
+    <p class="mt-10 text-center text-sm text-gray-500">{exclusions.microcopy}</p>
   </div>
 </section>

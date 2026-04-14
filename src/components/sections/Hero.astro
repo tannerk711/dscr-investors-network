@@ -7,7 +7,7 @@
  * NO rate, NO DSCR ratio, NO LTV, NO stock photo, NO phone.
  */
 import { hero } from '../../content';
-import { EquityScrubber } from '../islands/hero/EquityScrubber';
+import CashCardForm from '../islands/quote/CashCardForm';
 ---
 
 <section
@@ -18,26 +18,27 @@ import { EquityScrubber } from '../islands/hero/EquityScrubber';
     <div class="grid items-center gap-10 md:grid-cols-2 md:gap-12 lg:gap-16">
       {/* LEFT: copy + CTA */}
       <div>
-        <p
-          class="text-xs font-semibold uppercase tracking-widest text-gray-300"
-        >
-          DSCR Cash-Out Refi
-        </p>
+        <div class="inline-flex items-center gap-2 rounded-full border border-success/30 bg-success/10 px-3 py-1">
+          <span class="inline-block h-2 w-2 rounded-full bg-success"></span>
+          <span class="text-[11px] font-semibold uppercase tracking-widest text-success">
+            DSCR Cash-Out Refi
+          </span>
+        </div>
 
         <h1
-          class="mt-4 text-4xl font-extrabold leading-[1.05] tracking-tight text-white md:text-6xl"
+          class="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-white md:text-6xl"
         >
           {hero.headline}
         </h1>
 
-        <p class="mt-6 text-lg leading-relaxed text-gray-300 md:text-xl">
+        <p class="mt-5 text-base leading-relaxed text-gray-300 md:text-lg">
           {hero.subheadline}
         </p>
 
-        <div class="mt-10">
+        <div class="mt-8">
           <a
             href="#cash-card-form"
-            class="inline-flex items-center gap-2 rounded-xl bg-red-accent px-8 py-4 text-base font-bold tracking-wide text-white shadow-lg transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            class="inline-flex items-center gap-2 rounded-lg bg-red-accent px-6 py-3 text-sm font-semibold tracking-wide text-white shadow-md transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             <span>{hero.ctaLabel}</span>
             <span aria-hidden="true">&rarr;</span>
@@ -45,24 +46,25 @@ import { EquityScrubber } from '../islands/hero/EquityScrubber';
         </div>
       </div>
 
-      {/* RIGHT: Interactive EquityScrubber — the centerpiece.
-          Replaces the static CashCardMock so the mechanic is discoverable
-          above the fold without any form fields. */}
-      <div class="relative mt-4 md:mt-0">
-        <EquityScrubber client:load />
+      {/* RIGHT: Actual 4-question Cash Card form, hoisted into the hero.
+          Wrapped in a white card (NewPad-style) so it lifts off the ink bg. */}
+      <div class="relative mt-4 md:mt-0" id="cash-card-form">
+        <div class="rounded-2xl bg-white text-ink shadow-xl ring-1 ring-black/5">
+          <CashCardForm client:load />
+        </div>
       </div>
     </div>
 
-    {/* Trust strip — 3 items, stacked on mobile / 3-col desktop */}
+    {/* Trust strip — subtle card row, 3 items */}
     <ul
-      class="mt-16 grid gap-4 border-t border-white/10 pt-10 sm:gap-6 grid-cols-1 md:mt-20 md:grid-cols-3"
+      class="mt-14 grid gap-3 grid-cols-1 sm:gap-4 md:mt-16 md:grid-cols-3"
     >
       {
         hero.trustStrip.map((line) => (
-          <li class="flex items-start gap-3">
+          <li class="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-4">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
+              class="mt-0.5 h-4 w-4 flex-shrink-0 text-success"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -73,7 +75,7 @@ import { EquityScrubber } from '../islands/hero/EquityScrubber';
             >
               <polyline points="20 6 9 17 4 12" />
             </svg>
-            <span class="text-sm leading-snug text-gray-300">{line}</span>
+            <span class="text-[13px] leading-snug text-gray-300">{line}</span>
           </li>
         ))
       }

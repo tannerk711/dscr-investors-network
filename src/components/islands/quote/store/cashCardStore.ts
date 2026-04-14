@@ -28,8 +28,8 @@ export type StepKey =
   | 'success';
 
 export const STEP_ORDER: StepKey[] = [
-  'state',
   'q1',
+  'state',
   'q2',
   'q3',
   'q4',
@@ -91,7 +91,7 @@ export type CashCardFormState = {
 const STORAGE_KEY = 'dscrin.cashcard.v1';
 
 const initialState: CashCardFormState = {
-  step: 'state',
+  step: 'q1',
   direction: 'forward',
   state: null,
   propertyType: null,

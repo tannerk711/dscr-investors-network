@@ -1,17 +1,17 @@
 {
   "stateGate": {
-    "headline": "First — what state is your rental in?",
+    "headline": "What state is the property in?",
     "states": [
       { "code": "TX", "label": "Texas" },
       { "code": "FL", "label": "Florida" },
       { "code": "GA", "label": "Georgia" },
+      { "code": "IN", "label": "Indiana" },
       { "code": "TN", "label": "Tennessee" },
       { "code": "NC", "label": "North Carolina" },
-      { "code": "IN", "label": "Indiana" },
-      { "code": "TODO_CLIENT_STATE_7", "label": "TODO_CLIENT" },
-      { "code": "TODO_CLIENT_STATE_8", "label": "TODO_CLIENT" },
-      { "code": "TODO_CLIENT_STATE_9", "label": "TODO_CLIENT" },
-      { "code": "TODO_CLIENT_STATE_10", "label": "TODO_CLIENT" }
+      { "code": "VA", "label": "Virginia" },
+      { "code": "MO", "label": "Missouri" },
+      { "code": "SC", "label": "South Carolina" },
+      { "code": "NY", "label": "New York" }
     ],
     "offStateExitCopy": "We're not funding deals in your state right now — drop your email and we'll let you know when we open it up."
   },

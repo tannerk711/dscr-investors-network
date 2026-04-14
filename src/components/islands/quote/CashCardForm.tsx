@@ -11,8 +11,6 @@ import {
 } from './store/cashCardStore';
 import { CashCardPreview } from './CashCardPreview';
 import { ResumeToast } from './ResumeToast';
-import { ExitIntentModal } from './ExitIntentModal';
-import { useExitIntent } from './useExitIntent';
 import { firePixelEvent, cashMidpoint } from './pixel';
 import { Step0State } from './steps/Step0State';
 import { Step1PropertyType } from './steps/Step1PropertyType';
@@ -66,7 +64,7 @@ const slideVariants = {
 const STEP_TRANSITION = { duration: 0.26, ease: [0.25, 0.46, 0.45, 0.94] } as const;
 const STEP_TRANSITION_REDUCED = { duration: 0.15, ease: 'linear' } as const;
 
-const FORM_QUESTION_STEPS: StepKey[] = ['state', 'q1', 'q2', 'q3', 'q4', 'q5'];
+const FORM_QUESTION_STEPS: StepKey[] = ['q1', 'state', 'q2', 'q3', 'q4', 'q5'];
 
 function ProgressDots({ current }: { current: StepKey }) {
   const idx = FORM_QUESTION_STEPS.indexOf(current);
@@ -155,7 +153,7 @@ function useStepAnalytics(step: StepKey): void {
     const fired = firedRef.current;
     const snap = cashCardStore.get();
 
-    if (step === 'q1' && !fired.formStart) {
+    if (step === 'state' && !fired.formStart) {
       fired.formStart = true;
       firePixelEvent('Lead_FormStart', {
         content_category: 'dscr_refi',
@@ -207,18 +205,6 @@ export default function CashCardForm() {
   // Fire client-side pixel events at the right funnel moments.
   useStepAnalytics(state.step);
 
-  // Exit-intent modal — only armed once the user has reached Q3 or later
-  // (they've answered enough to be worth saving) and only fires once
-  // per session (enforced inside the hook via sessionStorage).
-  const stepIdx = STEP_ORDER.indexOf(state.step);
-  const q3Idx = STEP_ORDER.indexOf('q3');
-  const successIdx = STEP_ORDER.indexOf('success');
-  const exitIntentEnabled =
-    stepIdx >= q3Idx && stepIdx < successIdx && state.submittedAt === null;
-  const { triggered: exitIntentOpen, dismiss: dismissExitIntent } = useExitIntent({
-    enabled: exitIntentEnabled,
-  });
-
   // In reduced-motion mode the slide-left/slide-right translation is
   // actively distracting, so we collapse to a simple opacity crossfade.
   const variants = prefersReduced
@@ -262,9 +248,6 @@ export default function CashCardForm() {
         </AnimatePresence>
       </div>
 
-      {/* W3-J: Exit-intent modal. Renders null unless `exitIntentOpen` is true.
-          Armed only when the user is on Q3 or later and hasn't submitted. */}
-      <ExitIntentModal open={exitIntentOpen} onClose={dismissExitIntent} />
     </div>
   );
 }

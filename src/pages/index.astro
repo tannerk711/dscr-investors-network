@@ -2,16 +2,11 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/sections/Header.astro';
 import Hero from '../components/sections/Hero.astro';
-import FundedTicker from '../components/sections/FundedTicker.astro';
-import BreakevenTeeter from '../components/sections/BreakevenTeeter.astro';
-import ReceiptCorkboard from '../components/sections/ReceiptCorkboard.astro';
+import RecentClosedDeals from '../components/sections/RecentClosedDeals.astro';
 import Process from '../components/sections/Process.astro';
 import Exclusions from '../components/sections/Exclusions.astro';
-import Team from '../components/sections/Team.astro';
-import FAQ from '../components/sections/FAQ.astro';
 import FinalCTA from '../components/sections/FinalCTA.astro';
 import Footer from '../components/sections/Footer.astro';
-import CashCardForm from '../components/islands/quote/CashCardForm';
 import { StickyMobileCTA } from '../components/islands/nav/StickyMobileCTA';
 import { ScrollProgress } from '../components/islands/nav/ScrollProgress';
 import { hero } from '../content';
@@ -21,20 +16,9 @@ import { hero } from '../content';
   <ScrollProgress client:load />
   <Header />
   <Hero />
-  <FundedTicker />
-  <section
-    id="cash-card-form"
-    class="bg-off-white py-16 md:py-24"
-    aria-label="4-Question Cash Card form"
-  >
-    <CashCardForm client:load />
-  </section>
-  <BreakevenTeeter />
-  <ReceiptCorkboard />
+  <RecentClosedDeals />
   <Process />
   <Exclusions />
-  <Team />
-  <FAQ />
   <FinalCTA />
   <Footer />
   <StickyMobileCTA client:load label={`${hero.ctaLabel} →`} />

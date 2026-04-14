@@ -8,7 +8,7 @@ import {
   selectFinalResult,
 } from '../store/cashCardStore';
 import { usePartialLead } from '../usePartialLead';
-import { DigitMorph } from '../DigitMorph';
+import { useCountUp } from '../useCountUp';
 
 /**
  * Step 6 — The Cash Card reveal.
@@ -46,9 +46,10 @@ export function Step6CashCardReveal() {
   usePartialLead();
 
   // Drumroll / reveal state machine.
-  const DRUMROLL_MS = prefersReduced ? 0 : 1800;
-  const MORPH_DELAY_CASH = prefersReduced ? 0 : DRUMROLL_MS;
-  const MORPH_DELAY_FLOW = prefersReduced ? 0 : DRUMROLL_MS + 400;
+  const DRUMROLL_MS = prefersReduced ? 0 : 1200;
+  const COUNTUP_DURATION = prefersReduced ? 0 : 1100;
+  const CASH_DELAY = prefersReduced ? 0 : DRUMROLL_MS;
+  const FLOW_DELAY = prefersReduced ? 0 : DRUMROLL_MS + 400;
   const TIMELINE_DELAY = prefersReduced ? 0 : DRUMROLL_MS + 800;
 
   const [drumrollDone, setDrumrollDone] = useState(prefersReduced);
@@ -61,7 +62,7 @@ export function Step6CashCardReveal() {
       return;
     }
     const t1 = window.setTimeout(() => setDrumrollDone(true), DRUMROLL_MS);
-    const t2 = window.setTimeout(() => setPulseLocked(true), DRUMROLL_MS + 1800);
+    const t2 = window.setTimeout(() => setPulseLocked(true), DRUMROLL_MS + 1500);
     return () => {
       window.clearTimeout(t1);
       window.clearTimeout(t2);
@@ -98,6 +99,21 @@ export function Step6CashCardReveal() {
   const cashFlowTarget = Math.round(result.monthlyCashFlow / 10) * 10;
   const flowAbs = Math.abs(cashFlowTarget);
   const flowSign = cashFlowTarget < 0 ? '-' : '';
+
+  // Tween the display numbers from 0 → target with an ease-out expo curve.
+  // Replaces the DigitMorph per-digit reel — that had a layout bug on some
+  // clients where the reel container rendered its leading digits invisibly,
+  // so the reveal card showed "$   ,000" instead of "$85,000".
+  const cashDisplay = useCountUp(cashMid, {
+    duration: COUNTUP_DURATION,
+    delay: CASH_DELAY,
+    skip: prefersReduced,
+  });
+  const flowDisplay = useCountUp(flowAbs, {
+    duration: COUNTUP_DURATION,
+    delay: FLOW_DELAY,
+    skip: prefersReduced,
+  });
 
   const tightFlow = result.edgeCases.includes('TIGHT_OR_NEGATIVE_CASH_FLOW');
   const lowCashOut = result.edgeCases.includes('LOW_CASH_OUT_UNDER_10K');
@@ -153,16 +169,12 @@ export function Step6CashCardReveal() {
               —
             </p>
           ) : (
-            <DigitMorph
-              value={cashMid}
-              prefix="$"
-              direction="rtl"
-              baseDelay={MORPH_DELAY_CASH}
-              staggerMs={60}
-              durationMs={700}
-              className="text-5xl font-extrabold tracking-tight text-navy md:text-6xl"
-              ariaLabel={`Cash at close: $${cashMid.toLocaleString('en-US')}`}
-            />
+            <p
+              className="text-5xl font-extrabold tracking-tight text-navy tabular-nums md:text-6xl"
+              aria-label={`Cash at close: $${cashMid.toLocaleString('en-US')}`}
+            >
+              ${Math.round(cashDisplay).toLocaleString('en-US')}
+            </p>
           )}
           <p className="mt-2 text-sm font-medium text-gray-500">
             {!drumrollDone && !prefersReduced
@@ -184,26 +196,16 @@ export function Step6CashCardReveal() {
           {!drumrollDone && !prefersReduced ? (
             <SkeletonNumber size="md" />
           ) : (
-            <div
-              className={`inline-flex items-baseline text-3xl font-extrabold tracking-tight md:text-4xl ${
+            <p
+              className={`text-3xl font-extrabold tracking-tight tabular-nums md:text-4xl ${
                 tightFlow ? 'text-red-accent' : 'text-success'
               }`}
+              aria-label={`Monthly cash flow: ${flowSign}$${flowAbs.toLocaleString(
+                'en-US'
+              )} per month`}
             >
-              {flowSign && <span className="mr-0.5">{flowSign}</span>}
-              <DigitMorph
-                value={flowAbs}
-                prefix="$"
-                suffix="/mo"
-                direction="ltr"
-                baseDelay={MORPH_DELAY_FLOW}
-                staggerMs={60}
-                durationMs={700}
-                className=""
-                ariaLabel={`Monthly cash flow: ${flowSign}$${flowAbs.toLocaleString(
-                  'en-US'
-                )} per month`}
-              />
-            </div>
+              {flowSign}${Math.round(flowDisplay).toLocaleString('en-US')}/mo
+            </p>
           )}
           <p className="mt-1 text-sm font-medium text-gray-500">
             {!drumrollDone && !prefersReduced
