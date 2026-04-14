@@ -121,7 +121,7 @@ export function CashCardPdfDocument({ data }: { data: CashCardPdfData }) {
         </View>
 
         <Text style={styles.meta}>
-          A Platinum loan officer from our team will text you within 2
+          A cash-out specialist from our team will text you within 2
           business hours with your locked numbers. No dialer. No robocalls.
           {'\n\n'}
           Generated {new Date(data.generatedAt).toLocaleString('en-US')}

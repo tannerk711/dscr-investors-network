@@ -102,7 +102,7 @@ export function CashCardPreview() {
     // q5 — we have rent; show soft range if no FICO, concrete if FICO set.
     if (result && result.hardKickout === null) {
       if (result.grossCashOut <= 0) {
-        cashLine = 'No cash to pull at this LTV';
+        cashLine = 'Not much equity to pull yet';
       } else if (hasFico) {
         cashLine = `Cash at close: ${formatUsdK(result.cashLow)} – ${formatUsdK(result.cashHigh)}`;
       } else {

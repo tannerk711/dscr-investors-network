@@ -144,7 +144,7 @@ export function Step6CashCardReveal() {
       className="text-center"
     >
       <p className="text-xs font-semibold uppercase tracking-widest text-navy">
-        Your Cash Card
+        Here Are Your Numbers
       </p>
       <h2 className="mt-2 text-3xl font-extrabold leading-tight text-ink md:text-4xl">
         {reveal.headline}
@@ -180,9 +180,9 @@ export function Step6CashCardReveal() {
             {!drumrollDone && !prefersReduced
               ? 'calculating…'
               : noCashOut
-                ? 'No cash to pull at this LTV — talk to your LO about options'
+                ? 'Not much equity to pull yet — your specialist can walk through timing'
                 : lowCashOut
-                  ? 'Modest cash-out — your LO can talk timing'
+                  ? 'Modest cash-out — your specialist can walk through timing'
                   : reveal.cashLineLabel}
           </p>
         </div>
@@ -211,7 +211,7 @@ export function Step6CashCardReveal() {
             {!drumrollDone && !prefersReduced
               ? ' '
               : tightFlow
-                ? 'Tight cash flow — your LO can run interest-only options'
+                ? 'Tight cash flow — your specialist can walk through interest-only options'
                 : reveal.cashFlowLineLabel}
           </p>
         </div>

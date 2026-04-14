@@ -220,6 +220,7 @@ export type Process = z.infer<typeof ProcessSchema>;
 
 export const FinalCtaSchema = z.object({
   headline: z.string(),
+  subheadline: z.string(),
   ctaLabel: z.string(),
 });
 export type FinalCta = z.infer<typeof FinalCtaSchema>;
