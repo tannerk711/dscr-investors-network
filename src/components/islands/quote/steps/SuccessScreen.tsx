@@ -55,7 +55,7 @@ export function SuccessScreen() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch {
-      setPdfError("Couldn't generate the PDF — try again or check your email.");
+      setPdfError("Couldn't generate the PDF. Try again or check your email.");
     } finally {
       setPdfLoading(false);
     }

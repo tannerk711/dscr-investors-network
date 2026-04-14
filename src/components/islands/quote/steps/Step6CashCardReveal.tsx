@@ -180,9 +180,9 @@ export function Step6CashCardReveal() {
             {!drumrollDone && !prefersReduced
               ? 'calculating…'
               : noCashOut
-                ? 'Not much equity to pull yet — your specialist can walk through timing'
+                ? 'Not much equity to pull yet. Your specialist can walk through timing.'
                 : lowCashOut
-                  ? 'Modest cash-out — your specialist can walk through timing'
+                  ? 'Modest cash-out. Your specialist can walk through timing.'
                   : reveal.cashLineLabel}
           </p>
         </div>
@@ -211,7 +211,7 @@ export function Step6CashCardReveal() {
             {!drumrollDone && !prefersReduced
               ? ' '
               : tightFlow
-                ? 'Tight cash flow — your specialist can walk through interest-only options'
+                ? 'Tight cash flow. Your specialist can walk through interest-only options.'
                 : reveal.cashFlowLineLabel}
           </p>
         </div>

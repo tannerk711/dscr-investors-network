@@ -13,7 +13,7 @@
       { "code": "SC", "label": "South Carolina" },
       { "code": "NY", "label": "New York" }
     ],
-    "offStateExitCopy": "We're not funding deals in your state right now — drop your email and we'll let you know when we open it up."
+    "offStateExitCopy": "We're not funding deals in your state right now. Drop your email and we'll let you know when we open it up."
   },
   "q1PropertyType": {
     "headline": "What kind of property is it?",
@@ -23,7 +23,7 @@
       { "id": "condo", "label": "Condo", "icon": "condo" },
       { "id": "str", "label": "Short-term rental (Airbnb/VRBO)", "icon": "key" }
     ],
-    "otherKickoutCopy": "Modular, mobile, or 5+ acres? We don't lend on those — drop your email and we'll let you know when we have options."
+    "otherKickoutCopy": "Modular, mobile, or 5+ acres? We don't lend on those. Drop your email and we'll let you know when we have options."
   },
   "q2PropertyValue": {
     "headline": "What's it worth today?",
@@ -31,7 +31,7 @@
     "max": 2000000,
     "step": 25000,
     "default": 400000,
-    "minTooltip": "Min property value: $200K — anything smaller and the math doesn't work.",
+    "minTooltip": "Min property value: $200K. Anything smaller and the math doesn't work.",
     "helperHint": "Most investors in your state are $300K-$500K"
   },
   "q3LoanBalance": {
@@ -59,7 +59,7 @@
       { "id": "620to659", "label": "620-659", "sublabel": "Fair", "midpoint": 640 },
       { "id": "below620", "label": "Below 620", "sublabel": "", "midpoint": 600 }
     ],
-    "below620KickoutCopy": "We can sometimes help below 620 with a lower cash-out amount — drop your info and our team will reach out personally."
+    "below620KickoutCopy": "We can sometimes help below 620 with a lower cash-out amount. Drop your info and our team will reach out personally."
   },
   "reveal": {
     "headline": "Your Cash Card",

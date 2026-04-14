@@ -83,7 +83,7 @@ export function Step5FICO() {
             <h3 id="below620-heading" className="text-lg font-bold text-ink">
               {kickoutSubmitted
                 ? 'We have it.'
-                : "Below 620 — let's still try."}
+                : "Below 620. Let's still try."}
             </h3>
             <p className="mt-2 text-sm text-gray-500">
               {kickoutSubmitted

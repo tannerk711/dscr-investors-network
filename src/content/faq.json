@@ -3,7 +3,7 @@
   "items": [
     {
       "q": "Do you pull credit?",
-      "a": "Not until you ask us to. The 4-question form is a self-reported estimate — no hard pull."
+      "a": "Not until you ask us to. The 4-question form is a self-reported estimate. No hard pull."
     },
     {
       "q": "Do I need tax returns?",
@@ -23,7 +23,7 @@
     },
     {
       "q": "Is there a prepayment penalty?",
-      "a": "Yes, standard 5/4/3/2/1. Other structures available — ask your LO."
+      "a": "Yes, standard 5/4/3/2/1. Other structures available. Ask your specialist."
     },
     {
       "q": "Can I use this for a short-term rental?",

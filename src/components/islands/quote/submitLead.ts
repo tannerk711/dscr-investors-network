@@ -131,9 +131,9 @@ export async function submitLead(
       } catch {
         /* swallow */
       }
-      return { ok: false, error: 'Network error — please try again.' };
+      return { ok: false, error: 'Network error. Please try again.' };
     }
-    return { ok: false, error: 'Submission rejected — please check your info.' };
+    return { ok: false, error: 'Submission rejected. Please check your info.' };
   } catch {
     // Network failure on primary — try the fallback once
     try {
@@ -142,6 +142,6 @@ export async function submitLead(
     } catch {
       /* swallow */
     }
-    return { ok: false, error: 'Network error — please try again.' };
+    return { ok: false, error: 'Network error. Please try again.' };
   }
 }
