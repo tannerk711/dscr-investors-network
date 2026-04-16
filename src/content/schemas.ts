@@ -90,6 +90,7 @@ export const FormStepsSchema = z.object({
     timelineLine: z.string(),
     asterisk: z.string(),
     ctaLabel: z.string(),
+    ctaSubline: z.string(),
   }),
   contact: z.object({
     headline: z.string(),

@@ -242,6 +242,9 @@ export function Step6CashCardReveal() {
         <span>{reveal.ctaLabel}</span>
         <span aria-hidden="true">→</span>
       </button>
+      <p className="mx-auto mt-3 max-w-md text-sm leading-snug text-gray-500">
+        {reveal.ctaSubline}
+      </p>
     </motion.div>
   );
 }

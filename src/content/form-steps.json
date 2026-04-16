@@ -51,7 +51,7 @@
   },
   "q5Fico": {
     "headline": "Roughly, where's your credit score?",
-    "microcopy": "This is self-reported. We don't pull credit until you ask us to.",
+    "microcopy": "This is an estimate only, no credit is being pulled.",
     "brackets": [
       { "id": "740plus", "label": "740+", "sublabel": "Excellent", "midpoint": 760 },
       { "id": "700to739", "label": "700-739", "sublabel": "Great", "midpoint": 720 },
@@ -62,12 +62,13 @@
     "below620KickoutCopy": "We can sometimes help below 620 with a lower cash-out amount. Drop your info and our team will reach out personally."
   },
   "reveal": {
-    "headline": "Your Cash Card",
+    "headline": "Your Cash Out Estimate",
     "cashLineLabel": "cash in your pocket at close",
     "cashFlowLineLabel": "new cash flow after the loan",
     "timelineLine": "~15 business days from yes to wired",
-    "asterisk": "After typical closing fees. Final number depends on appraisal and title.",
-    "ctaLabel": "Lock My Cash Card"
+    "asterisk": "That is an estimate to be confirmed. Numbers vary off of credit, loan amount, and property taxes.",
+    "ctaLabel": "Get an exact quote. Firm up your numbers.",
+    "ctaSubline": "This is what we believe you should be eligible for. If you want to get a real quote, tell us more."
   },
   "contact": {
     "headline": "Where should we send your locked Cash Card?",
