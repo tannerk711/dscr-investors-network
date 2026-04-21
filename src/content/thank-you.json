@@ -8,7 +8,7 @@
   },
   "fallbackEmailLine": "Want to reach out first? Email us at hello@dscrinvestors.net",
   "emailTemplate": {
-    "subject": "Your DSCR Cash Card is locked",
-    "previewText": "Here's your Cash Card and what happens next."
+    "subject": "Your cash-out estimate is locked",
+    "previewText": "Here's your estimate and what happens next."
   }
 }

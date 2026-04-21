@@ -91,13 +91,13 @@ export type CashCardPdfData = {
 export function CashCardPdfDocument({ data }: { data: CashCardPdfData }) {
   return (
     <Document
-      title="Your DSCR Cash Card"
+      title="Your DSCR Cash-Out Estimate"
       author="DSCR Investors Network"
       subject="Cash-out estimate"
     >
       <Page size="LETTER" style={styles.page}>
         <Text style={styles.header}>DSCR Investors Network</Text>
-        <Text style={styles.title}>{data.firstName}, here's your Cash Card</Text>
+        <Text style={styles.title}>{data.firstName}, here's your cash-out estimate</Text>
 
         <View style={styles.card}>
           <Text style={styles.bigNumber}>

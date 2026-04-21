@@ -71,7 +71,7 @@
     "ctaSubline": "This is what we believe you should be eligible for. If you want to get a real quote, tell us more."
   },
   "contact": {
-    "headline": "Where should we send your locked Cash Card?",
+    "headline": "Where should we send your exact numbers?",
     "fields": {
       "firstName": "First name",
       "phone": "Mobile phone",
@@ -79,6 +79,6 @@
       "address": "Property address"
     },
     "microcopy": "A real loan officer from our team will text you within 2 business hours with your locked numbers. No dialer. No robocalls. No spam.",
-    "submitLabel": "Send My Cash Card"
+    "submitLabel": "Lock In My Numbers"
   }
 }

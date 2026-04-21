@@ -49,7 +49,7 @@ export function SuccessScreen() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'dscr-cash-card.pdf';
+      a.download = 'dscr-cash-out-estimate.pdf';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -91,9 +91,12 @@ export function SuccessScreen() {
       {result && result.hardKickout === null && (
         <div className="mx-auto mt-8 w-full max-w-md rounded-2xl border-2 border-navy bg-gradient-to-br from-white to-off-white p-6 shadow-xl md:p-8">
           <p className="text-xs font-semibold uppercase tracking-widest text-navy">
-            Your Cash Card
+            Your Estimate
           </p>
-          <p className="mt-3 text-4xl font-extrabold tabular-nums text-navy md:text-5xl">
+          <p className="mb-2 text-lg font-bold tracking-wide text-success md:text-xl">
+            Up to
+          </p>
+          <p className="text-4xl font-extrabold tabular-nums text-navy md:text-5xl">
             {formatUsd(cashLow)}
             <span className="text-xl text-gray-400"> – </span>
             {formatUsd(cashHigh)}
@@ -114,7 +117,7 @@ export function SuccessScreen() {
           <div className="my-5 h-px w-full bg-gray-200" />
 
           <p className="text-base font-bold text-ink">
-            ~15 business days from yes to wired
+            ~20 business days from yes to wired
           </p>
         </div>
       )}
@@ -126,7 +129,7 @@ export function SuccessScreen() {
           disabled={pdfLoading}
           className="inline-flex items-center gap-2 rounded-xl border-2 border-navy bg-white px-6 py-3 text-sm font-bold text-navy shadow-sm transition-all duration-200 hover:bg-navy hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy disabled:opacity-60"
         >
-          {pdfLoading ? 'Building PDF…' : 'Download My Cash Card (PDF)'}
+          {pdfLoading ? 'Building PDF…' : 'Download My Estimate (PDF)'}
         </button>
         {pdfError && (
           <p role="alert" className="text-xs text-red-accent">
