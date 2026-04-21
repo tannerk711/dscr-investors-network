@@ -1,8 +1,6 @@
 {
-  "nmls": "TODO_CLIENT",
   "links": [
     { "label": "Privacy Policy", "href": "https://dscrinvestors.net/privacy-policy/" },
     { "label": "Terms", "href": "https://dscrinvestors.net/terms-of-use/" }
-  ],
-  "compliance": "Equal Housing Opportunity. DSCR Investors Network. NMLS #TODO_CLIENT."
+  ]
 }

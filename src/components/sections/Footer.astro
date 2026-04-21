@@ -1,21 +1,5 @@
 ---
-/**
- * Footer — navy-dark, 3 columns on desktop, stacked on mobile.
- * Renders TODO_CLIENT placeholders visually as [TODO_CLIENT] so gaps are obvious in preview.
- * NO phone number (no dialer exists).
- */
 import { footer } from '../../content';
-
-const TODO_TOKEN = 'TODO_CLIENT';
-const renderToken = (value: string) =>
-  value === TODO_TOKEN ? '[TODO_CLIENT]' : value;
-
-// Replace any inline TODO_CLIENT occurrences inside the compliance string.
-const complianceText = footer.compliance.replaceAll(
-  TODO_TOKEN,
-  '[TODO_CLIENT]'
-);
-const nmlsLine = `NMLS #${renderToken(footer.nmls)}`;
 
 const currentYear = new Date().getFullYear();
 ---
@@ -79,8 +63,6 @@ const currentYear = new Date().getFullYear();
       class="mt-12 flex flex-col gap-4 border-t border-white/10 pt-8 text-xs leading-relaxed text-gray-400 md:flex-row md:items-start md:justify-between"
     >
       <div class="space-y-2 md:max-w-3xl">
-        <p>{nmlsLine}</p>
-        <p>{complianceText}</p>
         <p>&copy; {currentYear} DSCR Investors Network. All rights reserved.</p>
       </div>
 

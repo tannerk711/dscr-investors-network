@@ -236,7 +236,6 @@ export const CorkboardSchema = z.object({
 export type Corkboard = z.infer<typeof CorkboardSchema>;
 
 export const FooterSchema = z.object({
-  nmls: z.string(),
   links: z
     .array(
       z.object({
@@ -245,6 +244,5 @@ export const FooterSchema = z.object({
       })
     )
     .min(1),
-  compliance: z.string(),
 });
 export type Footer = z.infer<typeof FooterSchema>;
