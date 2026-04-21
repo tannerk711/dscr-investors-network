@@ -42,15 +42,14 @@ const metaPixelId =
         Honors ?disable_pixel=1 QA hatch. Stub fallback when env var missing. */}
     {metaPixelId ? (
       <script is:inline define:vars={{ metaPixelId }}>
-        {`(function() {
-          try {
-            var params = new URLSearchParams(window.location.search);
-            if (params.get('disable_pixel') === '1') {
-              window.__dscrinPixelDisabled = true;
-              window.fbq = function() {};
-              return;
-            }
-          } catch (e) { /* ignore */ }
+        try {
+          var params = new URLSearchParams(window.location.search);
+          if (params.get('disable_pixel') === '1') {
+            window.__dscrinPixelDisabled = true;
+            window.fbq = function() {};
+          }
+        } catch (e) { /* ignore */ }
+        if (!window.__dscrinPixelDisabled) {
           !function(f,b,e,v,n,t,s)
           {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
           n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -61,13 +60,13 @@ const metaPixelId =
           'https://connect.facebook.net/en_US/fbevents.js');
           fbq('init', metaPixelId);
           fbq('track', 'PageView');
-        })();`}
+        }
       </script>
     ) : (
       <script is:inline>
-        {`console.warn('[dscrin] PUBLIC_META_PIXEL_ID not set — Meta Pixel disabled. Set it in .env to enable client-side tracking.');
-          window.fbq = function() {};
-          window.__dscrinPixelDisabled = true;`}
+        console.warn('[dscrin] PUBLIC_META_PIXEL_ID not set — Meta Pixel disabled.');
+        window.fbq = function() {};
+        window.__dscrinPixelDisabled = true;
       </script>
     )}
     {metaPixelId && (
