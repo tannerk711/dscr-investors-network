@@ -171,7 +171,7 @@ export const ThankYouSchema = z.object({
     phone: z.string(),
     photoUrl: z.string(),
   }),
-  fallbackEmailLine: z.string(),
+  fallbackContactLine: z.string(),
   emailTemplate: z.object({
     subject: z.string(),
     previewText: z.string(),

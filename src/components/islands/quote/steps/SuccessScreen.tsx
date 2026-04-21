@@ -138,7 +138,7 @@ export function SuccessScreen() {
         )}
       </div>
 
-      <p className="mt-8 text-sm text-gray-500">{thankYou.fallbackEmailLine}</p>
+      <p className="mt-8 text-sm text-gray-500">{thankYou.fallbackContactLine}</p>
     </div>
   );
 }
