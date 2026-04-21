@@ -164,12 +164,14 @@ export function Step6CashCardReveal() {
               —
             </p>
           ) : (
-            <p
-              className="text-5xl font-extrabold tracking-tight text-navy tabular-nums md:text-6xl"
-              aria-label={`Up to $${cashMid.toLocaleString('en-US')} cash at close`}
-            >
-              Up to ${Math.round(cashDisplay).toLocaleString('en-US')}
-            </p>
+            <div aria-label={`Up to $${cashMid.toLocaleString('en-US')} cash at close`}>
+              <p className="mb-2 text-lg font-bold tracking-wide text-success md:text-xl">
+                Up to
+              </p>
+              <p className="text-5xl font-extrabold tracking-tight text-navy tabular-nums md:text-6xl">
+                ${Math.round(cashDisplay).toLocaleString('en-US')}
+              </p>
+            </div>
           )}
           <p className="mt-2 text-sm font-medium text-gray-500">
             {!drumrollDone && !prefersReduced
