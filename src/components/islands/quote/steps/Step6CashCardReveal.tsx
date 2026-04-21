@@ -7,7 +7,6 @@ import {
   cashCardStore,
   selectFinalResult,
 } from '../store/cashCardStore';
-import { usePartialLead } from '../usePartialLead';
 import { useCountUp } from '../useCountUp';
 
 /**
@@ -40,10 +39,6 @@ export function Step6CashCardReveal() {
   const { reveal } = formSteps;
   const result = selectFinalResult(state);
   const prefersReduced = useReducedMotion() ?? false;
-
-  // W3-J: Fire a partial-lead event if the user sits on the reveal for
-  // 60 seconds without advancing to contact. Exactly-once per session.
-  usePartialLead();
 
   // Drumroll / reveal state machine.
   const DRUMROLL_MS = prefersReduced ? 0 : 1200;

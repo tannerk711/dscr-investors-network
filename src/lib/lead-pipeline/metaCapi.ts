@@ -1,7 +1,6 @@
 import { createHash } from 'node:crypto';
 import type {
   LeadPayloadWithMeta,
-  PartialLeadPayloadWithMeta,
 } from './payloadSchema';
 import type { PipelineResult } from './types';
 
@@ -21,9 +20,8 @@ import type { PipelineResult } from './types';
  * - First name: lowercased + trimmed, SHA-256
  * - client_ip_address and client_user_agent are passed in plaintext
  *
- * W3-J note: this function now supports `Lead`, `Lead_PartialLead`, and
- * `Lead_RevealReached` via the `eventName` parameter, and takes an
- * optional `event_id` for pixel↔CAPI deduplication.
+ * Supports `Lead` and `Lead_RevealReached` via the `eventName` parameter,
+ * and takes an optional `event_id` for pixel↔CAPI deduplication.
  */
 function sha256(value: string): string {
   return createHash('sha256').update(value).digest('hex');
@@ -42,7 +40,7 @@ export function hashFirstName(firstName: string): string {
   return sha256(firstName.trim().toLowerCase());
 }
 
-export type MetaEventName = 'Lead' | 'Lead_PartialLead' | 'Lead_RevealReached';
+export type MetaEventName = 'Lead' | 'Lead_RevealReached';
 
 interface MetaUserData {
   em?: string[];
@@ -67,13 +65,12 @@ interface MetaEventBody {
       currency?: 'USD';
       lead_event_source: string;
       content_category: string;
-      partial_source?: string;
     };
   }>;
   test_event_code?: string;
 }
 
-type AnyLeadPayload = LeadPayloadWithMeta | PartialLeadPayloadWithMeta;
+type AnyLeadPayload = LeadPayloadWithMeta;
 
 export interface PostMetaEventOptions {
   eventName?: MetaEventName;
@@ -150,11 +147,6 @@ export async function postMetaEvent(
   const userData = buildUserData(payload);
   const value = computeValue(payload, options.value);
 
-  const partialSource =
-    'partialSource' in payload && payload.partialSource
-      ? payload.partialSource
-      : undefined;
-
   const body: MetaEventBody = {
     data: [
       {
@@ -168,7 +160,6 @@ export async function postMetaEvent(
           currency: 'USD',
           lead_event_source: 'dscrinvestors_landing',
           content_category: 'dscr_refi',
-          ...(partialSource ? { partial_source: partialSource } : {}),
         },
       },
     ],
@@ -226,15 +217,3 @@ export async function postLeadEvent(
   });
 }
 
-/**
- * Helper specifically for partial leads — thin wrapper that sets the
- * event name and forwards the eventId.
- */
-export async function postPartialLeadEvent(
-  payload: PartialLeadPayloadWithMeta
-): Promise<PipelineResult> {
-  return postMetaEvent(payload, {
-    eventName: 'Lead_PartialLead',
-    eventId: payload.eventId,
-  });
-}

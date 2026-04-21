@@ -6,10 +6,9 @@
  * automatically. This module only wraps the CUSTOM events that the form
  * fires at specific funnel moments.
  *
- * Event taxonomy (W3-J):
+ * Event taxonomy:
  *   - Lead_FormStart       — user advances past the state gate into Q1
  *   - Lead_RevealReached   — user reaches the Cash Card reveal (high intent)
- *   - Lead_PartialLead     — exit-intent modal opt-in OR reveal timeout
  *   - Lead                 — standard Meta event, fires on SuccessScreen mount
  *                            (NOT on contact submit — submit could 500 and
  *                            we'd over-count the lead)
@@ -25,8 +24,7 @@
 export type PixelEventName =
   | 'Lead'
   | 'Lead_FormStart'
-  | 'Lead_RevealReached'
-  | 'Lead_PartialLead';
+  | 'Lead_RevealReached';
 
 interface FbqFn {
   (cmd: 'init', pixelId: string): void;

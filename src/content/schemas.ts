@@ -10,11 +10,6 @@ export const HeroSchema = z.object({
   subheadline: z.string().min(1),
   ctaLabel: z.string().min(1),
   trustStrip: z.array(z.string().min(1)).length(3),
-  mockCard: z.object({
-    cashAtClose: z.string().min(1),
-    cashFlow: z.string().min(1),
-    timeline: z.string().min(1),
-  }),
 });
 export type Hero = z.infer<typeof HeroSchema>;
 

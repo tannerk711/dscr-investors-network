@@ -3,9 +3,9 @@ import { createHash } from 'node:crypto';
 import type { LeadPayloadWithMeta } from '../payloadSchema';
 
 /**
- * W3-J — Meta Conversions API helper unit tests.
+ * Meta Conversions API helper unit tests.
  *
- * These tests cover the four requirements from the W3-J spec:
+ * Covers:
  *   1. Email / phone / first_name are SHA-256 hashed per Meta CAPI rules.
  *   2. The `event_id` param is forwarded to the CAPI payload for dedup.
  *   3. Missing env vars return `{ ok: false, reason: 'config_missing' }`
@@ -186,29 +186,4 @@ describe('metaCapi.postMetaEvent', () => {
     expect(body.data[0].event_id).toBe('webhook-dedup-id-abc123');
   });
 
-  it('postPartialLeadEvent fires the Lead_PartialLead event with partial_source custom data', async () => {
-    process.env.META_PIXEL_ID = 'test_pixel';
-    process.env.META_CAPI_ACCESS_TOKEN = 'test_token';
-
-    const { postPartialLeadEvent } = await import('../metaCapi');
-    const fetchMock = fetch as unknown as ReturnType<typeof vi.fn>;
-
-    await postPartialLeadEvent({
-      email: 'retarget@example.com',
-      landingPageVariant: 'cash-card-v1',
-      submittedAt: '2026-04-09T17:00:00.000Z',
-      partialSource: 'exit_intent',
-      eventId: 'partial-evt-xyz',
-    });
-
-    const init = fetchMock.mock.calls[0]![1] as { body: string };
-    const body = JSON.parse(init.body);
-    expect(body.data[0].event_name).toBe('Lead_PartialLead');
-    expect(body.data[0].event_id).toBe('partial-evt-xyz');
-    expect(body.data[0].custom_data.partial_source).toBe('exit_intent');
-    // Only email was provided — phone/firstName should be absent
-    expect(body.data[0].user_data.em).toHaveLength(1);
-    expect(body.data[0].user_data.ph).toBeUndefined();
-    expect(body.data[0].user_data.fn).toBeUndefined();
-  });
 });

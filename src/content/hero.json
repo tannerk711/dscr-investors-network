@@ -6,10 +6,5 @@
     "We can close in 15 business days. Most conventional banks take 30-60.",
     "No tax returns. No W-2s. Your rent qualifies the loan.",
     "See your real cash number in 60 seconds, before anyone calls you."
-  ],
-  "mockCard": {
-    "cashAtClose": "$94,000 in your pocket",
-    "cashFlow": "$1,080/mo cash flow",
-    "timeline": "15 business days to wire"
-  }
+  ]
 }
