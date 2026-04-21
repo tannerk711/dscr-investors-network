@@ -2,9 +2,8 @@
   "ficoAdjustment": -20,
   "ltvBrackets": [
     { "minFico": 680, "ltvCap": 0.75 },
-    { "minFico": 660, "ltvCap": 0.65 },
-    { "minFico": 580, "ltvCap": 0.50 },
-    { "minFico": 0, "ltvCap": 0 }
+    { "minFico": 620, "ltvCap": 0.70 },
+    { "minFico": 0, "ltvCap": 0.50 }
   ],
   "feesHaircut": {
     "low": 0.80,

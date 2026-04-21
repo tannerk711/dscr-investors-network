@@ -166,9 +166,9 @@ export function Step6CashCardReveal() {
           ) : (
             <p
               className="text-5xl font-extrabold tracking-tight text-navy tabular-nums md:text-6xl"
-              aria-label={`Cash at close: $${cashMid.toLocaleString('en-US')}`}
+              aria-label={`Up to $${cashMid.toLocaleString('en-US')} cash at close`}
             >
-              ${Math.round(cashDisplay).toLocaleString('en-US')}
+              Up to ${Math.round(cashDisplay).toLocaleString('en-US')}
             </p>
           )}
           <p className="mt-2 text-sm font-medium text-gray-500">

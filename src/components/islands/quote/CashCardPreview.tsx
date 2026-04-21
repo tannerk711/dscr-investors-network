@@ -93,30 +93,30 @@ export function CashCardPreview() {
   //   q5 (FICO):                            "Cash at close: $XXK-$XXK"
   let cashLine: string;
   if (state.step === 'q2') {
-    cashLine = `Running ballpark: ${formatUsdK(animatedCash)}`;
+    cashLine = `Running ballpark: Up to ${formatUsdK(animatedCash)}`;
   } else if (state.step === 'q3') {
-    cashLine = `Running ballpark: ${formatUsdK(animatedCash)}`;
+    cashLine = `Running ballpark: Up to ${formatUsdK(animatedCash)}`;
   } else if (state.step === 'q4') {
-    cashLine = `Cash at close: ~${formatUsdK(animatedCash)} (sharpens with rent)`;
+    cashLine = `Cash at close: Up to ~${formatUsdK(animatedCash)} (sharpens with rent)`;
   } else {
     // q5 — we have rent; show soft range if no FICO, concrete if FICO set.
     if (result && result.hardKickout === null) {
       if (result.grossCashOut <= 0) {
         cashLine = 'Not much equity to pull yet';
       } else if (hasFico) {
-        cashLine = `Cash at close: ${formatUsdK(result.cashLow)} – ${formatUsdK(result.cashHigh)}`;
+        cashLine = `Cash at close: Up to ${formatUsdK(result.cashLow)} – ${formatUsdK(result.cashHigh)}`;
       } else {
-        cashLine = `Cash at close: ~${formatUsdK(animatedCash)} (sharpens with FICO)`;
+        cashLine = `Cash at close: Up to ~${formatUsdK(animatedCash)} (sharpens with FICO)`;
       }
     } else {
-      cashLine = `Cash at close: ~${formatUsdK(animatedCash)}`;
+      cashLine = `Cash at close: Up to ~${formatUsdK(animatedCash)}`;
     }
   }
 
   let flowLine = '';
   if (result && result.hardKickout === null && postRentBand) {
     flowLine = hasFico
-      ? `Cash flow: ${formatMonthly(result.monthlyCashFlow)} • 15 business days`
+      ? `Cash flow: ${formatMonthly(result.monthlyCashFlow)} • 20 business days`
       : `Cash flow: ~${formatMonthly(result.monthlyCashFlow)} (sharpens with FICO)`;
   }
 

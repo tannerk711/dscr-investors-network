@@ -101,7 +101,7 @@ export function CashCardPdfDocument({ data }: { data: CashCardPdfData }) {
 
         <View style={styles.card}>
           <Text style={styles.bigNumber}>
-            {formatUsd(data.cashLow)} – {formatUsd(data.cashHigh)}
+            Up to {formatUsd(data.cashLow)} – {formatUsd(data.cashHigh)}
           </Text>
           <Text style={styles.smallLabel}>cash in your pocket at close</Text>
 
@@ -112,7 +112,7 @@ export function CashCardPdfDocument({ data }: { data: CashCardPdfData }) {
 
           <View style={styles.divider} />
 
-          <Text style={styles.timeline}>~15 business days from yes to wired</Text>
+          <Text style={styles.timeline}>~20 business days from yes to wired</Text>
 
           <Text style={styles.asterisk}>
             * After typical closing fees. Final number depends on appraisal and
