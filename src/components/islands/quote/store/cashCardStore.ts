@@ -69,6 +69,7 @@ export type CashCardFormState = {
   ficoBracket: FicoBracket | null;
   // Contact (filled at Step 6)
   firstName: string;
+  lastName: string;
   phone: string;
   email: string;
   propertyAddress: string;
@@ -101,6 +102,7 @@ const initialState: CashCardFormState = {
   trailing12Revenue: null,
   ficoBracket: null,
   firstName: '',
+  lastName: '',
   phone: '',
   email: '',
   propertyAddress: '',
@@ -155,6 +157,7 @@ const TOUCH_FIELDS: ReadonlyArray<keyof CashCardFormState> = [
   'trailing12Revenue',
   'ficoBracket',
   'firstName',
+  'lastName',
   'phone',
   'email',
   'propertyAddress',
@@ -215,6 +218,7 @@ export const cashCardActions = {
   },
   setContact(p: {
     firstName: string;
+    lastName: string;
     phone: string;
     email: string;
     propertyAddress: string;

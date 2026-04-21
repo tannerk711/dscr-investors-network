@@ -8,20 +8,11 @@ import { cashCardActions, cashCardStore } from '../store/cashCardStore';
 /**
  * G2 gate test (master-build-plan §10): the reveal screen MUST render in the
  * DOM BEFORE the contact form mounts. This is the load-bearing UX guarantee
- * from the Apr 9 pivot — Anthony's whole pitch is "see the cash, then ask
+ * from the Apr 9 pivot — the whole pitch is "see the numbers, then ask
  * for contact info." If a future refactor accidentally swaps the order
  * (e.g. by inlining contact fields into the reveal), this test fails.
- *
- * Approach:
- *  1. Drive the nanostore directly with a fully-answered form state.
- *  2. Set step to 'reveal' → render → assert "Your Cash Card" is in the DOM
- *     and the contact submit button is NOT.
- *  3. Advance to 'contact' → re-render → assert the contact submit button
- *     appears AFTER the cash-card text disappears (or at least after we
- *     left the reveal step). This is the temporal order — reveal first,
- *     contact second — that the master plan demands.
  */
-describe('Cash Card form: DOM order — reveal precedes contact', () => {
+describe('Quote form: DOM order — reveal precedes contact', () => {
   beforeEach(() => {
     cashCardActions.reset();
     // Pre-populate with valid answers so the engine produces a real result.
@@ -38,63 +29,59 @@ describe('Cash Card form: DOM order — reveal precedes contact', () => {
     cashCardActions.reset();
   });
 
-  it('reveal step renders Cash Card text without any contact form fields', () => {
+  it('reveal step renders estimate headline without any contact form fields', () => {
     act(() => {
       cashCardActions.setStep('reveal');
     });
     render(<CashCardForm />);
 
-    // The Cash Card reveal must be present. Use the H2 role specifically —
-    // the screen also has an eyebrow with the same text, so a plain
-    // getByText would error on multiple matches.
-    const cashCardHeading = screen.getByRole('heading', {
-      name: /Your Cash Card/i,
+    // The estimate reveal must be present.
+    const estimateHeading = screen.getByRole('heading', {
+      name: /Your Cash Out Estimate/i,
     });
-    expect(cashCardHeading).toBeTruthy();
+    expect(estimateHeading).toBeTruthy();
 
-    // The "Lock My Cash Card" CTA must be visible — this is the only way
-    // forward and proves the reveal owns the screen.
-    const lockCta = screen.getByRole('button', { name: /Lock My Cash Card/i });
-    expect(lockCta).toBeTruthy();
+    // The CTA to get an exact quote must be visible.
+    const quoteCta = screen.getByRole('button', { name: /Get an exact quote/i });
+    expect(quoteCta).toBeTruthy();
 
     // The contact submit button MUST NOT exist yet.
     const submitButton = screen.queryByRole('button', {
-      name: /Send My Cash Card/i,
+      name: /Lock In My Numbers/i,
     });
     expect(submitButton).toBeNull();
 
     // None of the contact inputs should be in the DOM either.
     expect(screen.queryByLabelText(/First name/i)).toBeNull();
+    expect(screen.queryByLabelText(/Last name/i)).toBeNull();
     expect(screen.queryByLabelText(/Mobile phone/i)).toBeNull();
     expect(screen.queryByLabelText(/Email/i)).toBeNull();
     expect(screen.queryByLabelText(/Property address/i)).toBeNull();
   });
 
-  it('contact step renders ALL contact fields and the cash-card heading is gone', () => {
+  it('contact step renders ALL contact fields and the estimate heading is gone', () => {
     act(() => {
       cashCardActions.setStep('contact');
     });
     render(<CashCardForm />);
 
-    // The "Your Cash Card" headline from the reveal must NOT be on screen.
+    // The estimate headline from the reveal must NOT be on screen.
     expect(
-      screen.queryByRole('heading', { name: /Your Cash Card/i })
+      screen.queryByRole('heading', { name: /Your Cash Out Estimate/i })
     ).toBeNull();
 
     // The contact submit + every contact input must now be present.
     expect(
-      screen.getByRole('button', { name: /Send My Cash Card/i })
+      screen.getByRole('button', { name: /Lock In My Numbers/i })
     ).toBeTruthy();
     expect(screen.getByLabelText(/First name/i)).toBeTruthy();
+    expect(screen.getByLabelText(/Last name/i)).toBeTruthy();
     expect(screen.getByLabelText(/Mobile phone/i)).toBeTruthy();
     expect(screen.getByLabelText(/Email/i)).toBeTruthy();
     expect(screen.getByLabelText(/Property address/i)).toBeTruthy();
   });
 
   it('reveal step appears earlier than contact step in STEP_ORDER', async () => {
-    // Belt-and-suspenders: the route order must put reveal before contact.
-    // If anyone reorders STEP_ORDER, this catches it without needing a
-    // full render walk.
     const { STEP_ORDER } = await import('../store/cashCardStore');
     const revealIdx = STEP_ORDER.indexOf('reveal');
     const contactIdx = STEP_ORDER.indexOf('contact');
@@ -104,8 +91,6 @@ describe('Cash Card form: DOM order — reveal precedes contact', () => {
   });
 
   it('store cannot be at contact step until reveal has been visited via next()', () => {
-    // The forward path is: q5 → next() → reveal → next() → contact.
-    // There's no way to skip reveal because steps are linear in STEP_ORDER.
     cashCardActions.setStep('q5');
     cashCardActions.next();
     expect(cashCardStore.get().step).toBe('reveal');
@@ -113,14 +98,7 @@ describe('Cash Card form: DOM order — reveal precedes contact', () => {
     expect(cashCardStore.get().step).toBe('contact');
   });
 
-  // W3-J — Resume toast should NOT appear on a fresh/empty sessionStorage.
-  // The afterEach/beforeEach only pre-populates the store via actions in
-  // this session (not via sessionStorage), but the ResumeToast gates on
-  // BOTH a non-default state AND lastTouchedAt within 7 days. The toast
-  // snapshot runs in the useState initializer so we check the DOM right
-  // after render. Separate test block to isolate the setup.
   it('ResumeToast does NOT render when lastTouchedAt is null (empty resume)', () => {
-    // Fully reset — no answers at all.
     cashCardActions.reset();
     cashCardActions.setStep('state');
     render(<CashCardForm />);

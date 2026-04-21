@@ -91,6 +91,7 @@ export const FormStepsSchema = z.object({
     headline: z.string(),
     fields: z.object({
       firstName: z.string(),
+      lastName: z.string(),
       phone: z.string(),
       email: z.string(),
       address: z.string(),

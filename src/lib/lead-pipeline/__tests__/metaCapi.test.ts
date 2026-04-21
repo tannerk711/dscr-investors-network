@@ -19,11 +19,12 @@ import type { LeadPayloadWithMeta } from '../payloadSchema';
 
 const samplePayload: LeadPayloadWithMeta = {
   firstName: 'Tanner',
+  lastName: 'Kauffman',
   phone: '(555) 867-5309',
   email: 'Tanner@Example.COM',
   propertyAddress: '123 Main St, Austin, TX',
   state: 'TX',
-  propertyType: 'sfr',
+  propertyType: 'Single Family',
   propertyValue: 400000,
   currentBalance: 200000,
   monthlyRent: 4000,

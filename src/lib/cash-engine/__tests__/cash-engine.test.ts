@@ -129,13 +129,13 @@ describe('cash engine — 10 canonical scenarios', () => {
     expect(r.edgeCases).toEqual([]);
   });
 
-  // Test 5 — 660 grey zone
-  // 660-699 → adj 660 → 0.65 LTV
-  // newLoan = 400000 * 0.65 = 260000
-  // gross = 110000; cashLow = 88000; cashHigh = 99000
-  // PITI = 2600; cashFlow = 3500 - 2600 = 900
-  // cashFlowLow = 765; cashFlowHigh = 1035
-  it('5. 660 grey zone (65% LTV)', () => {
+  // Test 5 — 660 bracket (620/680 split → 0.70 LTV)
+  // 660-699 → adj 660 → falls in 620-679 bracket → 0.70 LTV
+  // newLoan = 400000 * 0.70 = 280000
+  // gross = 130000; cashLow = 104000; cashHigh = 117000
+  // PITI = 2800; cashFlow = 3500 - 2800 = 700
+  // cashFlowLow = 595; cashFlowHigh = 805
+  it('5. 660 bracket (70% LTV)', () => {
     const input: CashCardInput = {
       state: 'OH',
       propertyType: 'sfr',
@@ -146,15 +146,15 @@ describe('cash engine — 10 canonical scenarios', () => {
     };
     const r = calculateCash(input);
     expect(r.hardKickout).toBeNull();
-    expect(r.ltvCap).toBe(0.65);
-    expect(r.newLoanAmount).toBe(260000);
-    expect(r.grossCashOut).toBe(110000);
-    expect(r.cashLow).toBe(88000);
-    expect(r.cashHigh).toBe(99000);
-    expect(r.estimatedPITI).toBe(2600);
-    expect(r.monthlyCashFlow).toBe(900);
-    expect(r.cashFlowLow).toBeCloseTo(765, 5);
-    expect(r.cashFlowHigh).toBeCloseTo(1035, 5);
+    expect(r.ltvCap).toBe(0.70);
+    expect(r.newLoanAmount).toBe(280000);
+    expect(r.grossCashOut).toBe(130000);
+    expect(r.cashLow).toBe(104000);
+    expect(r.cashHigh).toBe(117000);
+    expect(r.estimatedPITI).toBe(2800);
+    expect(r.monthlyCashFlow).toBe(700);
+    expect(r.cashFlowLow).toBeCloseTo(595, 5);
+    expect(r.cashFlowHigh).toBeCloseTo(805, 5);
     expect(r.edgeCases).toEqual([]);
   });
 

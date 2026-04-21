@@ -12,13 +12,19 @@ import { z } from 'zod';
 export const LeadPayloadSchema = z.object({
   // Contact
   firstName: z.string().min(1).max(80),
+  lastName: z.string().min(1).max(80),
   phone: z.string().min(7).max(32),
   email: z.string().email().max(254),
   propertyAddress: z.string().min(1).max(300),
 
   // Deal shape
   state: z.string().min(2).max(2),
-  propertyType: z.enum(['sfr', 'multi', 'condo', 'str']),
+  propertyType: z.enum([
+    'Single Family',
+    '2-4 Unit',
+    'Condo',
+    'Short-Term Rental',
+  ]),
   propertyValue: z.number().finite().nonnegative(),
   currentBalance: z.number().finite().nonnegative(),
   monthlyRent: z.number().finite().nonnegative(),

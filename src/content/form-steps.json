@@ -74,6 +74,7 @@
     "headline": "Where should we send your exact numbers?",
     "fields": {
       "firstName": "First name",
+      "lastName": "Last name",
       "phone": "Mobile phone",
       "email": "Email",
       "address": "Property address"

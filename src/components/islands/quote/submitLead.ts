@@ -1,6 +1,14 @@
 import type { LeadPayload } from '@lib/lead-pipeline/payloadSchema';
 import type { CashCardFormState } from './store/cashCardStore';
 import { selectFinalResult } from './store/cashCardStore';
+import type { PropertyType } from '@lib/cash-engine/types';
+
+const PROPERTY_TYPE_LABELS: Record<PropertyType, LeadPayload['propertyType']> = {
+  sfr: 'Single Family',
+  multi: '2-4 Unit',
+  condo: 'Condo',
+  str: 'Short-Term Rental',
+};
 
 /**
  * Build the LeadPayload from the current cash card store state and POST it
@@ -64,11 +72,12 @@ export function buildLeadPayload(
 
   return {
     firstName: state.firstName,
+    lastName: state.lastName,
     phone: state.phone,
     email: state.email,
     propertyAddress: state.propertyAddress,
     state: state.state,
-    propertyType: state.propertyType,
+    propertyType: PROPERTY_TYPE_LABELS[state.propertyType],
     propertyValue: state.propertyValue,
     currentBalance: state.currentBalance,
     monthlyRent: state.monthlyRent,

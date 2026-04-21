@@ -25,6 +25,10 @@ const ContactSchema = z.object({
     .string()
     .min(1, 'Required')
     .max(80, 'Too long'),
+  lastName: z
+    .string()
+    .min(1, 'Required')
+    .max(80, 'Too long'),
   phone: z
     .string()
     .min(7, 'Looks too short')
@@ -52,6 +56,7 @@ export function Step7Contact() {
     resolver: zodResolver(ContactSchema),
     defaultValues: {
       firstName: state.firstName,
+      lastName: state.lastName,
       phone: state.phone,
       email: state.email,
       propertyAddress: state.propertyAddress,
@@ -80,25 +85,48 @@ export function Step7Contact() {
       <p className="mt-2 text-sm text-gray-500">{contact.microcopy}</p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6 flex flex-col gap-4">
-        <div>
-          <label
-            htmlFor="firstName"
-            className="block text-xs font-semibold uppercase tracking-wide text-gray-500"
-          >
-            {contact.fields.firstName}
-          </label>
-          <input
-            id="firstName"
-            type="text"
-            autoComplete="given-name"
-            {...register('firstName')}
-            className="mt-1 w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-base text-ink shadow-sm focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/30"
-          />
-          {errors.firstName && (
-            <p className="mt-1 text-xs text-red-accent">
-              {errors.firstName.message}
-            </p>
-          )}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label
+              htmlFor="firstName"
+              className="block text-xs font-semibold uppercase tracking-wide text-gray-500"
+            >
+              {contact.fields.firstName}
+            </label>
+            <input
+              id="firstName"
+              type="text"
+              autoComplete="given-name"
+              {...register('firstName')}
+              className="mt-1 w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-base text-ink shadow-sm focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/30"
+            />
+            {errors.firstName && (
+              <p className="mt-1 text-xs text-red-accent">
+                {errors.firstName.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="lastName"
+              className="block text-xs font-semibold uppercase tracking-wide text-gray-500"
+            >
+              {contact.fields.lastName}
+            </label>
+            <input
+              id="lastName"
+              type="text"
+              autoComplete="family-name"
+              {...register('lastName')}
+              className="mt-1 w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-base text-ink shadow-sm focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/30"
+            />
+            {errors.lastName && (
+              <p className="mt-1 text-xs text-red-accent">
+                {errors.lastName.message}
+              </p>
+            )}
+          </div>
         </div>
 
         <div>

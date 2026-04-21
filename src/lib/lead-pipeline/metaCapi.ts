@@ -40,12 +40,17 @@ export function hashFirstName(firstName: string): string {
   return sha256(firstName.trim().toLowerCase());
 }
 
+export function hashLastName(lastName: string): string {
+  return sha256(lastName.trim().toLowerCase());
+}
+
 export type MetaEventName = 'Lead' | 'Lead_RevealReached';
 
 interface MetaUserData {
   em?: string[];
   ph?: string[];
   fn?: string[];
+  ln?: string[];
   client_ip_address?: string;
   client_user_agent?: string;
   fbc?: string;
@@ -119,6 +124,9 @@ function buildUserData(payload: AnyLeadPayload): MetaUserData {
   }
   if (payload.firstName) {
     userData.fn = [hashFirstName(payload.firstName)];
+  }
+  if (payload.lastName) {
+    userData.ln = [hashLastName(payload.lastName)];
   }
   if (payload.ipAddress) userData.client_ip_address = payload.ipAddress;
   if (payload.userAgent) userData.client_user_agent = payload.userAgent;
