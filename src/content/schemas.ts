@@ -76,7 +76,7 @@ export const FormStepsSchema = z.object({
         })
       )
       .length(5),
-    below620KickoutCopy: z.string(),
+    below620KickoutCopy: z.string().optional(),
   }),
   reveal: z.object({
     headline: z.string(),

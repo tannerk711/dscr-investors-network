@@ -59,7 +59,7 @@
       { "id": "620to659", "label": "620-659", "sublabel": "Fair", "midpoint": 640 },
       { "id": "below620", "label": "Below 620", "sublabel": "", "midpoint": 600 }
     ],
-    "below620KickoutCopy": "We can sometimes help below 620 with a lower cash-out amount. Drop your info and our team will reach out personally."
+    "below620KickoutCopy": ""
   },
   "reveal": {
     "headline": "Your Cash Out Estimate",
