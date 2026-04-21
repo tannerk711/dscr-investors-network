@@ -38,9 +38,8 @@ const metaPixelId =
     />
     <title>{title}</title>
 
-    {/* W3-J: Meta Pixel base code. Always injects a stub so firePixelEvent
-        is safe to call; only loads the real fbevents.js when PUBLIC_META_PIXEL_ID
-        is a non-placeholder string. Honors the ?disable_pixel=1 QA hatch. */}
+    {/* Meta Pixel base code — matches FB's install snippet exactly.
+        Honors ?disable_pixel=1 QA hatch. Stub fallback when env var missing. */}
     {metaPixelId ? (
       <script is:inline define:vars={{ metaPixelId }}>
         {`(function() {
@@ -60,8 +59,8 @@ const metaPixelId =
           t.src=v;s=b.getElementsByTagName(e)[0];
           s.parentNode.insertBefore(t,s)}(window,document,'script',
           'https://connect.facebook.net/en_US/fbevents.js');
-          window.fbq('init', metaPixelId);
-          window.fbq('track', 'PageView');
+          fbq('init', metaPixelId);
+          fbq('track', 'PageView');
         })();`}
       </script>
     ) : (
@@ -70,6 +69,13 @@ const metaPixelId =
           window.fbq = function() {};
           window.__dscrinPixelDisabled = true;`}
       </script>
+    )}
+    {metaPixelId && (
+      <noscript>
+        <img height="1" width="1" style="display:none"
+          src={`https://www.facebook.com/tr?id=${metaPixelId}&ev=PageView&noscript=1`}
+        />
+      </noscript>
     )}
   </head>
   <body class="bg-white text-ink antialiased">
