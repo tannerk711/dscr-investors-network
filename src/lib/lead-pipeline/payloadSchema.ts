@@ -3,8 +3,8 @@ import { z } from 'zod';
 /**
  * Zod schema for the inbound lead POST body.
  *
- * Mirrors the field shape in `src/content/salesforce-schema.json` plus
- * the Meta CAPI cookies (fbp, fbc) and the tracking attribution fields.
+ * Validates the lead POST body sent to /api/lead-webhook.
+ * Includes Meta CAPI cookies (fbp, fbc) and tracking attribution fields.
  *
  * NOTE: `ipAddress` is NOT in this schema. The server fills it in from
  * the `x-forwarded-for` request header — never trust the client for IP.

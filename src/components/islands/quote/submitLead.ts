@@ -4,12 +4,11 @@ import { selectFinalResult } from './store/cashCardStore';
 
 /**
  * Build the LeadPayload from the current cash card store state and POST it
- * to /api/lead-webhook with a single retry on 5xx, falling back to
- * /api/lead-fallback if the primary path returns non-2xx after retry.
+ * to /api/lead-webhook with a single retry on 5xx.
  *
  * Returns `{ ok: true }` on any successful side-effect (the webhook fans
- * out to Salesforce + CAPI + email; any one succeeding is enough), and
- * `{ ok: false, error }` only when ALL paths failed.
+ * out to Zapier + CAPI; any one succeeding is enough), and
+ * `{ ok: false, error }` only when the request failed after retry.
  */
 
 function readUtm(): {
@@ -87,11 +86,6 @@ export function buildLeadPayload(
     submittedAt: new Date().toISOString(),
     userAgent:
       typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
-    // W3-J: mirror the pixel `Lead` event_id so Meta dedupes the
-    // client-side and server-side Lead fires. Undefined means the
-    // user never reached the reveal (shouldn't happen in the normal
-    // flow — contact is only reachable via reveal.next()) but we leave
-    // the field optional for defensiveness.
     eventId: state.eventId ?? undefined,
   };
 }
@@ -112,22 +106,14 @@ export async function submitLead(
     return { ok: false, error: 'Missing required answers' };
   }
 
-  // Primary attempt
   try {
     const res = await postOnce('/api/lead-webhook', payload);
     if (res.ok) return { ok: true };
     if (res.status >= 500) {
-      // Single retry
+      // Single retry on 5xx
       try {
         const retry = await postOnce('/api/lead-webhook', payload);
         if (retry.ok) return { ok: true };
-      } catch {
-        /* swallow — fall through to fallback */
-      }
-      // Fallback: email-only path
-      try {
-        const fallback = await postOnce('/api/lead-fallback', payload);
-        if (fallback.ok) return { ok: true };
       } catch {
         /* swallow */
       }
@@ -135,10 +121,10 @@ export async function submitLead(
     }
     return { ok: false, error: 'Submission rejected. Please check your info.' };
   } catch {
-    // Network failure on primary — try the fallback once
+    // Network failure — retry once
     try {
-      const fallback = await postOnce('/api/lead-fallback', payload);
-      if (fallback.ok) return { ok: true };
+      const retry = await postOnce('/api/lead-webhook', payload);
+      if (retry.ok) return { ok: true };
     } catch {
       /* swallow */
     }

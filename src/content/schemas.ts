@@ -178,12 +178,6 @@ export const ThankYouSchema = z.object({
 });
 export type ThankYou = z.infer<typeof ThankYouSchema>;
 
-export const SalesforceSchemaSchema = z.object({
-  webhookUrl: z.string(),
-  fields: z.record(z.string(), z.string()),
-});
-export type SalesforceSchema = z.infer<typeof SalesforceSchemaSchema>;
-
 export const RuleOfThumbSchema = z.object({
   headline: z.string(),
   subheadline: z.string(),

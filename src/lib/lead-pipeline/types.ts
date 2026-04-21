@@ -1,5 +1,5 @@
 /**
- * Shared types for the lead pipeline (Salesforce + Meta CAPI + Resend).
+ * Shared types for the lead pipeline (Zapier + Meta CAPI).
  * The canonical inbound payload shape is defined in `payloadSchema.ts`
  * as a Zod schema; this file re-exports the inferred TS types plus the
  * uniform result envelope returned by every side-effect module.
@@ -11,8 +11,8 @@ export type { LeadPayload, LeadPayloadWithMeta };
 
 /**
  * Uniform result envelope for any side-effect in the pipeline.
- * Every module (salesforce, metaCapi, resendEmail) returns this shape
- * so the orchestrating route can aggregate them with Promise.allSettled.
+ * Every module (zapier, metaCapi) returns this shape so the
+ * orchestrating route can aggregate them with Promise.allSettled.
  */
 export type PipelineResult =
   | { ok: true; status?: number }
@@ -33,8 +33,7 @@ export type ResultStatus = 'ok' | 'error';
 export interface LeadWebhookResponse {
   ok: boolean;
   results: {
-    salesforce: ResultStatus;
+    zapier: ResultStatus;
     capi: ResultStatus;
-    email: ResultStatus;
   };
 }
