@@ -31,9 +31,14 @@ const ContactSchema = z.object({
     .max(80, 'Too long'),
   phone: z
     .string()
-    .min(7, 'Looks too short')
     .max(32, 'Too long')
-    .regex(/^[0-9+()\-\s]+$/, 'Numbers only'),
+    .regex(/^[0-9+()\-\s.]+$/, 'Numbers only')
+    .refine((val) => val.replace(/\D/g, '').length === 10, {
+      message: 'Enter a 10-digit phone number',
+    })
+    .refine((val) => !/(\d)\1{5,}/.test(val.replace(/\D/g, '')), {
+      message: 'Phone number looks invalid',
+    }),
   email: z.string().email('Not a valid email').max(254),
   propertyAddress: z
     .string()
