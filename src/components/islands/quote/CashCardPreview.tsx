@@ -116,7 +116,7 @@ export function CashCardPreview() {
   let flowLine = '';
   if (result && result.hardKickout === null && postRentBand) {
     flowLine = hasFico
-      ? `Cash flow: ${formatMonthly(result.monthlyCashFlow)} • 20 business days`
+      ? `Cash flow: ${formatMonthly(result.monthlyCashFlow)} • 15 business days`
       : `Cash flow: ~${formatMonthly(result.monthlyCashFlow)} (sharpens with FICO)`;
   }
 

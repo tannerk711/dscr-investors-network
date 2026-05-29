@@ -15,7 +15,7 @@ export const LeadPayloadSchema = z.object({
   lastName: z.string().min(1).max(80),
   phone: z.string().min(7).max(32),
   email: z.string().email().max(254),
-  propertyAddress: z.string().min(1).max(300),
+  propertyAddress: z.string().max(300).optional().default(''),
 
   // Deal shape
   state: z.string().min(2).max(2),

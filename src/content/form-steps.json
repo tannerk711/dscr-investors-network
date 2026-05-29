@@ -50,7 +50,7 @@
     "strHint": "(divide by 12 for the monthly equivalent)"
   },
   "q5Fico": {
-    "headline": "Roughly, where's your credit score?",
+    "headline": "Roughly, where's your FICO?",
     "microcopy": "This is an estimate only, no credit is being pulled.",
     "brackets": [
       { "id": "740plus", "label": "740+", "sublabel": "Excellent", "midpoint": 760 },
@@ -65,21 +65,21 @@
     "headline": "Your Cash Out Estimate",
     "cashLineLabel": "cash in your pocket at close",
     "cashFlowLineLabel": "new cash flow after the loan",
-    "timelineLine": "~20 business days from yes to wired",
+    "timelineLine": "~15 business days from yes to wired",
     "asterisk": "That is an estimate to be confirmed. Numbers vary off of credit, loan amount, and property taxes.",
-    "ctaLabel": "Get an exact quote. Firm up your numbers.",
-    "ctaSubline": "This is what we believe you should be eligible for. If you want to get a real quote, tell us more."
+    "ctaLabel": "Want An Exact Quote?",
+    "ctaSubline": "This is the cash we think you can pull out of this property and put toward your next deal. Want your firm numbers? Tell us a bit more."
   },
   "contact": {
-    "headline": "Where should we send your exact numbers?",
+    "headline": "What's the best way to reach you?",
     "fields": {
       "firstName": "First name",
       "lastName": "Last name",
       "phone": "Mobile phone",
       "email": "Email",
-      "address": "Property address"
+      "address": "Property address (optional)"
     },
-    "microcopy": "A real loan officer from our team will text you within 2 business hours with your locked numbers. No dialer. No robocalls. No spam.",
-    "submitLabel": "Lock In My Numbers"
+    "microcopy": "A DSCR specialist from our team will reach out shortly to answer any questions you have, and if you're interested, see how we can help you get financing.",
+    "submitLabel": "I Want Exact Numbers"
   }
 }

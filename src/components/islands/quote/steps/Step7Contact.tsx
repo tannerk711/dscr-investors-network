@@ -42,8 +42,9 @@ const ContactSchema = z.object({
   email: z.string().email('Not a valid email').max(254),
   propertyAddress: z
     .string()
-    .min(5, 'Required')
-    .max(300, 'Too long'),
+    .max(300, 'Too long')
+    .optional()
+    .or(z.literal('')),
 });
 
 type ContactFormValues = z.infer<typeof ContactSchema>;
@@ -70,9 +71,27 @@ export function Step7Contact() {
   });
 
   async function onSubmit(values: ContactFormValues) {
-    cashCardActions.setContact(values);
+    // propertyAddress is optional; normalize to '' so the store keeps its
+    // required-string contract and the lead payload always sends a string.
+    const normalized = { ...values, propertyAddress: values.propertyAddress ?? '' };
+    cashCardActions.setContact(normalized);
     cashCardActions.setSubmitting(true);
-    const result = await submitLead({ ...cashCardStore.get(), ...values });
+
+    // Dev-only preview bypass: skip the webhook and jump to the success
+    // screen so the thank-you page can be reviewed without Zapier/CAPI wired.
+    // Double-gated on DEV build + ?preview=success so it can never run in prod.
+    const previewBypass =
+      import.meta.env.DEV &&
+      typeof window !== 'undefined' &&
+      new URLSearchParams(window.location.search).get('preview') === 'success';
+    if (previewBypass) {
+      cashCardActions.setSubmittedAt(new Date().toISOString());
+      cashCardActions.setSubmitting(false);
+      cashCardActions.next();
+      return;
+    }
+
+    const result = await submitLead({ ...cashCardStore.get(), ...normalized });
     if (result.ok) {
       cashCardActions.setSubmittedAt(new Date().toISOString());
       cashCardActions.setSubmitting(false);

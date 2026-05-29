@@ -83,23 +83,20 @@ export function Step6CashCardReveal() {
     );
   }
 
-  // Cash at close is displayed as the MIDPOINT of the engine range
-  // (rounded to nearest $1K) — the two-number slot-machine range from
-  // the Wave-3 pass was swapped for a single headline number in the
-  // digit-morph design so the drum fall lands crisply.
-  const cashMid = Math.max(
-    0,
-    Math.round((result.cashLow + result.cashHigh) / 2000) * 1000
-  );
-  const cashFlowTarget = Math.round(result.monthlyCashFlow / 10) * 10;
-  const flowAbs = Math.abs(cashFlowTarget);
-  const flowSign = cashFlowTarget < 0 ? '-' : '';
+  // Cash at close is displayed as a RANGE (low to high), rounded to the
+  // nearest $1K. The count-up animates the HIGH end of the range; the low
+  // end is static. This matches the success screen exactly.
+  const cashLowRounded = Math.max(0, Math.round(result.cashLow / 1000) * 1000);
+  const cashHighRounded = Math.max(0, Math.round(result.cashHigh / 1000) * 1000);
+  // monthlyCashFlow is already floored at 0 in the engine, so it is never
+  // negative. No sign handling needed.
+  const flowAbs = Math.max(0, Math.round(result.monthlyCashFlow / 10) * 10);
 
   // Tween the display numbers from 0 → target with an ease-out expo curve.
   // Replaces the DigitMorph per-digit reel — that had a layout bug on some
   // clients where the reel container rendered its leading digits invisibly,
   // so the reveal card showed "$   ,000" instead of "$85,000".
-  const cashDisplay = useCountUp(cashMid, {
+  const cashDisplay = useCountUp(cashHighRounded, {
     duration: COUNTUP_DURATION,
     delay: CASH_DELAY,
     skip: prefersReduced,
@@ -164,12 +161,13 @@ export function Step6CashCardReveal() {
               —
             </p>
           ) : (
-            <div aria-label={`Up to $${cashMid.toLocaleString('en-US')} cash at close`}>
-              <p className="mb-2 text-lg font-bold tracking-wide text-success md:text-xl">
-                Up to
-              </p>
-              <p className="text-5xl font-extrabold tracking-tight text-navy tabular-nums md:text-6xl">
-                ${Math.round(cashDisplay).toLocaleString('en-US')}
+            <div
+              aria-label={`$${cashLowRounded.toLocaleString('en-US')} to $${cashHighRounded.toLocaleString('en-US')} cash at close`}
+            >
+              <p className="text-4xl font-extrabold tracking-tight text-navy tabular-nums md:text-5xl">
+                ${cashLowRounded.toLocaleString('en-US')}
+                <span className="text-2xl text-gray-400"> – </span>$
+                {Math.round(cashDisplay).toLocaleString('en-US')}
               </p>
             </div>
           )}
@@ -194,21 +192,19 @@ export function Step6CashCardReveal() {
             <SkeletonNumber size="md" />
           ) : (
             <p
-              className={`text-3xl font-extrabold tracking-tight tabular-nums md:text-4xl ${
-                tightFlow ? 'text-red-accent' : 'text-success'
-              }`}
-              aria-label={`Monthly cash flow: ${flowSign}$${flowAbs.toLocaleString(
+              className="text-3xl font-extrabold tracking-tight tabular-nums text-success md:text-4xl"
+              aria-label={`Monthly cash flow: $${flowAbs.toLocaleString(
                 'en-US'
               )} per month`}
             >
-              {flowSign}${Math.round(flowDisplay).toLocaleString('en-US')}/mo
+              ${Math.round(flowDisplay).toLocaleString('en-US')}/mo
             </p>
           )}
           <p className="mt-1 text-sm font-medium text-gray-500">
             {!drumrollDone && !prefersReduced
               ? ' '
               : tightFlow
-                ? 'Tight cash flow. Your specialist can walk through interest-only options.'
+                ? 'Your specialist will structure this to cash flow, often with interest-only options.'
                 : reveal.cashFlowLineLabel}
           </p>
         </div>

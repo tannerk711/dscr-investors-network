@@ -35,7 +35,7 @@ export function Step3LoanBalance() {
         {q3LoanBalance.headline}
       </h2>
       <p className="mt-2 text-sm text-gray-500">
-        Approximate is fine. Your loan officer will pull the exact payoff.
+        Approximate is fine. Your specialist will pull the exact payoff.
       </p>
 
       <div className="mt-8">

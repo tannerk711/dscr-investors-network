@@ -161,8 +161,10 @@ describe('cash engine — 10 canonical scenarios', () => {
   // Test 6 — Under-rented property
   // 700-739 → adj 700 → 0.75 LTV
   // newLoan = 300000; gross = 200000
-  // PITI = 3000; cashFlow = 2000 - 3000 = -1000 → TIGHT_OR_NEGATIVE_CASH_FLOW
-  it('6. Under-rented property (negative cash flow flagged)', () => {
+  // PITI = 3000; raw cashFlow = 2000 - 3000 = -1000
+  // Displayed cashFlow is FLOORED at 0 (never show a negative), but the raw
+  // negative still trips TIGHT_OR_NEGATIVE_CASH_FLOW so the card softens the copy.
+  it('6. Under-rented property (cash flow floored at 0, still flagged)', () => {
     const input: CashCardInput = {
       state: 'TX',
       propertyType: 'sfr',
@@ -176,7 +178,9 @@ describe('cash engine — 10 canonical scenarios', () => {
     expect(r.grossCashOut).toBe(200000);
     expect(r.cashLow).toBe(160000);
     expect(r.cashHigh).toBe(180000);
-    expect(r.monthlyCashFlow).toBe(-1000);
+    expect(r.monthlyCashFlow).toBe(0);
+    expect(r.cashFlowLow).toBe(0);
+    expect(r.cashFlowHigh).toBe(0);
     expect(r.edgeCases).toContain('TIGHT_OR_NEGATIVE_CASH_FLOW');
     expect(r.edgeCases).not.toContain('NEGATIVE_OR_ZERO_CASH_OUT');
     expect(r.edgeCases).not.toContain('LOW_CASH_OUT_UNDER_10K');

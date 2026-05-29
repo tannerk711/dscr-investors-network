@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useStore } from '@nanostores/react';
 import { thankYou } from '@content/index';
 import {
@@ -10,61 +9,33 @@ import { formatUsd, formatMonthly } from '../format';
 /**
  * Success / thank-you screen.
  *
- * Re-displays the locked Cash Card so the user can screenshot it, plus
- * a download button that generates a PDF on demand. The PDF generator
- * is dynamically imported on click — @react-pdf/renderer is large, and
- * we don't want to ship it on initial form mount.
+ * Leads with the company logo + a personal "{firstName}, great to meet you!"
+ * Re-displays the locked Cash Card (range, matching the reveal card exactly),
+ * then social proof. No time promise is made here on purpose: the team
+ * reaches out "shortly"; the speed-to-lead cadence lives in the
+ * Zapier/Salesforce flow, not in copy.
  */
 export function SuccessScreen() {
   const state = useStore(cashCardStore);
   const result = selectFinalResult(state);
-  const [pdfLoading, setPdfLoading] = useState(false);
-  const [pdfError, setPdfError] = useState<string | null>(null);
 
-  const cashLow = result ? Math.max(0, Math.round(result.cashLow)) : 0;
-  const cashHigh = result ? Math.max(0, Math.round(result.cashHigh)) : 0;
-  const monthlyCashFlow = result ? Math.round(result.monthlyCashFlow) : 0;
-
-  async function handleDownload() {
-    setPdfLoading(true);
-    setPdfError(null);
-    try {
-      // Dynamic import of the entire PDF module so neither @react-pdf/renderer
-      // nor the document component land in the form's initial JS bundle.
-      const [{ pdf }, { CashCardPdfDocument }] = await Promise.all([
-        import('@react-pdf/renderer'),
-        import('../CashCardPdf'),
-      ]);
-      const blob = await pdf(
-        <CashCardPdfDocument
-          data={{
-            firstName: state.firstName || 'Investor',
-            cashLow,
-            cashHigh,
-            monthlyCashFlow,
-            generatedAt: state.submittedAt ?? new Date().toISOString(),
-          }}
-        />
-      ).toBlob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'dscr-cash-out-estimate.pdf';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch {
-      setPdfError("Couldn't generate the PDF. Try again or check your email.");
-    } finally {
-      setPdfLoading(false);
-    }
-  }
+  // Match the reveal card exactly: range rounded to the nearest $1K.
+  const cashLow = result ? Math.max(0, Math.round(result.cashLow / 1000) * 1000) : 0;
+  const cashHigh = result ? Math.max(0, Math.round(result.cashHigh / 1000) * 1000) : 0;
+  const monthlyCashFlow = result ? Math.round(result.monthlyCashFlow / 10) * 10 : 0;
+  const firstName = state.firstName?.trim() || 'there';
 
   return (
     <div className="text-center">
+      {/* Company logo */}
+      <img
+        src={thankYou.logoUrl}
+        alt="DSCR Investors Network"
+        className="mx-auto h-10 w-auto sm:h-12"
+      />
+
       {/* Animated check */}
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-success/10">
+      <div className="mx-auto mt-6 flex h-16 w-16 items-center justify-center rounded-full bg-success/10">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-8 w-8 text-success"
@@ -81,24 +52,21 @@ export function SuccessScreen() {
       </div>
 
       <h2 className="mt-6 text-3xl font-extrabold leading-tight text-ink md:text-4xl">
-        {thankYou.headline}
+        {firstName}, great to meet you!
       </h2>
       <p className="mx-auto mt-3 max-w-md text-base text-gray-500">
         {thankYou.subheadline}
       </p>
 
-      {/* Re-display the locked Cash Card */}
+      {/* Re-display the locked Cash Card — matches the reveal card exactly */}
       {result && result.hardKickout === null && (
         <div className="mx-auto mt-8 w-full max-w-md rounded-2xl border-2 border-navy bg-gradient-to-br from-white to-off-white p-6 shadow-xl md:p-8">
           <p className="text-xs font-semibold uppercase tracking-widest text-navy">
             Your Estimate
           </p>
-          <p className="mb-2 text-lg font-bold tracking-wide text-success md:text-xl">
-            Up to
-          </p>
-          <p className="text-4xl font-extrabold tabular-nums text-navy md:text-5xl">
+          <p className="mt-2 text-4xl font-extrabold tabular-nums text-navy md:text-5xl">
             {formatUsd(cashLow)}
-            <span className="text-xl text-gray-400"> – </span>
+            <span className="text-2xl text-gray-400"> – </span>
             {formatUsd(cashHigh)}
           </p>
           <p className="mt-1 text-sm text-gray-500">
@@ -117,28 +85,45 @@ export function SuccessScreen() {
           <div className="my-5 h-px w-full bg-gray-200" />
 
           <p className="text-base font-bold text-ink">
-            ~20 business days from yes to wired
+            ~15 business days from yes to wired
           </p>
         </div>
       )}
 
-      <div className="mt-6 flex flex-col items-center gap-3">
-        <button
-          type="button"
-          onClick={handleDownload}
-          disabled={pdfLoading}
-          className="inline-flex items-center gap-2 rounded-xl border-2 border-navy bg-white px-6 py-3 text-sm font-bold text-navy shadow-sm transition-all duration-200 hover:bg-navy hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy disabled:opacity-60"
-        >
-          {pdfLoading ? 'Building PDF…' : 'Download My Estimate (PDF)'}
-        </button>
-        {pdfError && (
-          <p role="alert" className="text-xs text-red-accent">
-            {pdfError}
-          </p>
-        )}
+      {/* Social proof */}
+      <div className="mx-auto mt-12 w-full max-w-3xl">
+        <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+          Investors we've funded
+        </p>
+        <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+          {thankYou.testimonials.map((t) => (
+            <figure
+              key={t.name}
+              className="flex flex-col items-center rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm"
+            >
+              <img
+                src={t.photoUrl}
+                alt={t.name}
+                className="h-16 w-16 rounded-full object-cover"
+              />
+              <blockquote className="mt-4 text-sm leading-relaxed text-gray-600">
+                &ldquo;{t.quote}&rdquo;
+              </blockquote>
+              <figcaption className="mt-4 text-sm font-bold text-ink">
+                {t.name}
+              </figcaption>
+              <div
+                className="mt-2 text-gold"
+                aria-label="5 out of 5 stars"
+              >
+                {'★★★★★'}
+              </div>
+            </figure>
+          ))}
+        </div>
       </div>
 
-      <p className="mt-8 text-sm text-gray-500">{thankYou.fallbackContactLine}</p>
+      <p className="mt-10 text-sm text-gray-500">{thankYou.fallbackContactLine}</p>
     </div>
   );
 }

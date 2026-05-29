@@ -1,12 +1,24 @@
 {
-  "headline": "You're locked in.",
-  "subheadline": "Your cash-out specialist is being assigned now. Expect a text within the next few minutes from a [area code] number. They'll call you within 2 business hours (Mon-Fri 9am-6pm ET).",
-  "loPlaceholder": {
-    "name": "TODO_CLIENT",
-    "phone": "TODO_CLIENT",
-    "photoUrl": "TODO_CLIENT"
-  },
+  "subheadline": "We'll reach out shortly to answer any questions you have, work up an exact quote and, if you're interested, show you exactly how we can help you get financing. No pressure either way.",
+  "logoUrl": "/logo.png",
   "fallbackContactLine": "Want to reach out first? Call us at (877) DSCR-NET",
+  "testimonials": [
+    {
+      "quote": "First time using a DSCR loan and I was skeptical about how it stacked up against conventional. But when I ran the math on cash flow vs. the time saved, it wasn't close. Closed on a 4-unit in Dallas without touching my personal income docs. The team walked me through how it works so I actually understood what I was qualifying on. Will definitely use them for the next deal.",
+      "name": "Priya S.",
+      "photoUrl": "/testimonials/priya-s.png"
+    },
+    {
+      "quote": "I've been investing in rentals for about six years and financing has always been the bottleneck. Traditional lenders kept asking for tax returns and W2s, which doesn't work when you write off everything. Got my deal closed fast on a duplex in Houston. No tax returns, no employment verification. Just the property's numbers. Already got the next one in underwriting.",
+      "name": "Marcus T.",
+      "photoUrl": "/testimonials/marcus-t.png"
+    },
+    {
+      "quote": "Had two conventional loans already and my lender told me I was maxed out. Found out about DSCR loans and it unlocked everything. The property qualifies based on rent, not my personal debt-to-income. Closed on my 3rd rental last month and already scouting the 4th. Wish I'd known about this two years ago.",
+      "name": "Amanda K.",
+      "photoUrl": "/testimonials/amanda-k.png"
+    }
+  ],
   "emailTemplate": {
     "subject": "Your cash-out estimate is locked",
     "previewText": "Here's your estimate and what happens next."

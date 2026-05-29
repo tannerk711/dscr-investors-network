@@ -42,12 +42,12 @@ describe('Quote form: DOM order — reveal precedes contact', () => {
     expect(estimateHeading).toBeTruthy();
 
     // The CTA to get an exact quote must be visible.
-    const quoteCta = screen.getByRole('button', { name: /Get an exact quote/i });
+    const quoteCta = screen.getByRole('button', { name: /Want An Exact Quote/i });
     expect(quoteCta).toBeTruthy();
 
     // The contact submit button MUST NOT exist yet.
     const submitButton = screen.queryByRole('button', {
-      name: /Lock In My Numbers/i,
+      name: /I Want Exact Numbers/i,
     });
     expect(submitButton).toBeNull();
 
@@ -57,6 +57,7 @@ describe('Quote form: DOM order — reveal precedes contact', () => {
     expect(screen.queryByLabelText(/Mobile phone/i)).toBeNull();
     expect(screen.queryByLabelText(/Email/i)).toBeNull();
     expect(screen.queryByLabelText(/Property address/i)).toBeNull();
+    // (label is now "Property address (optional)")
   });
 
   it('contact step renders ALL contact fields and the estimate heading is gone', () => {
@@ -72,7 +73,7 @@ describe('Quote form: DOM order — reveal precedes contact', () => {
 
     // The contact submit + every contact input must now be present.
     expect(
-      screen.getByRole('button', { name: /Lock In My Numbers/i })
+      screen.getByRole('button', { name: /I Want Exact Numbers/i })
     ).toBeTruthy();
     expect(screen.getByLabelText(/First name/i)).toBeTruthy();
     expect(screen.getByLabelText(/Last name/i)).toBeTruthy();

@@ -76,7 +76,7 @@ export function Step1PropertyType() {
         {q1PropertyType.headline}
       </h2>
       <p className="mt-2 text-sm text-gray-500">
-        Pick the closest match — your loan officer will confirm.
+        Pick the closest match. Your specialist will confirm.
       </p>
 
       <div className="mt-6 grid grid-cols-1 gap-3">

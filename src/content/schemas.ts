@@ -127,19 +127,6 @@ export const CashEngineConfigSchema = z.object({
 });
 export type CashEngineConfig = z.infer<typeof CashEngineConfigSchema>;
 
-export const FaqSchema = z.object({
-  headline: z.string(),
-  items: z
-    .array(
-      z.object({
-        q: z.string(),
-        a: z.string(),
-      })
-    )
-    .min(1),
-});
-export type Faq = z.infer<typeof FaqSchema>;
-
 export const ExclusionsSchema = z.object({
   headline: z.string(),
   items: z.array(z.string()).min(1),
@@ -147,52 +134,25 @@ export const ExclusionsSchema = z.object({
 });
 export type Exclusions = z.infer<typeof ExclusionsSchema>;
 
-export const LoBiosSchema = z.object({
-  headline: z.string(),
-  people: z
+export const ThankYouSchema = z.object({
+  subheadline: z.string(),
+  logoUrl: z.string(),
+  fallbackContactLine: z.string(),
+  testimonials: z
     .array(
       z.object({
-        name: z.string(),
-        role: z.string(),
-        bio: z.string(),
         quote: z.string(),
+        name: z.string(),
         photoUrl: z.string(),
       })
     )
-    .min(1),
-});
-export type LoBios = z.infer<typeof LoBiosSchema>;
-
-export const ThankYouSchema = z.object({
-  headline: z.string(),
-  subheadline: z.string(),
-  loPlaceholder: z.object({
-    name: z.string(),
-    phone: z.string(),
-    photoUrl: z.string(),
-  }),
-  fallbackContactLine: z.string(),
+    .length(3),
   emailTemplate: z.object({
     subject: z.string(),
     previewText: z.string(),
   }),
 });
 export type ThankYou = z.infer<typeof ThankYouSchema>;
-
-export const RuleOfThumbSchema = z.object({
-  headline: z.string(),
-  subheadline: z.string(),
-  examples: z
-    .array(
-      z.object({
-        loan: z.number(),
-        rent: z.number(),
-        result: z.string(),
-      })
-    )
-    .min(1),
-});
-export type RuleOfThumb = z.infer<typeof RuleOfThumbSchema>;
 
 export const ProcessSchema = z.object({
   headline: z.string(),
@@ -215,25 +175,6 @@ export const FinalCtaSchema = z.object({
   ctaLabel: z.string(),
 });
 export type FinalCta = z.infer<typeof FinalCtaSchema>;
-
-export const CorkboardSchema = z.object({
-  headline: z.string().min(1),
-  subheadline: z.string().min(1),
-  footnote: z.string().min(1),
-  receipts: z
-    .array(
-      z.object({
-        id: z.string().min(1),
-        propertyType: z.string().min(1),
-        cashOut: z.string().min(1),
-        cashFlow: z.string().min(1),
-        daysToClose: z.string().min(1),
-        stamp: z.string().min(1),
-      })
-    )
-    .min(3),
-});
-export type Corkboard = z.infer<typeof CorkboardSchema>;
 
 export const FooterSchema = z.object({
   links: z

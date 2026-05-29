@@ -53,7 +53,13 @@ export function calculateCashWithFicoAdjusted(
       ? (input.trailing12Revenue / 12) * config.strRevenueDiscount
       : input.monthlyRent;
 
-  const monthlyCashFlow = rentForDscr - estimatedPITI;
+  // Never surface a negative cash flow to the user. The "$1K PITI per $100K"
+  // rule over-prices the payment at the edges, and on untouched slider
+  // defaults the rent can be too low for the loan size, producing a scary
+  // negative that tanks the call. Floor the displayed cash flow at $0; the
+  // specialist works out the real, structured number live.
+  const rawMonthlyCashFlow = rentForDscr - estimatedPITI;
+  const monthlyCashFlow = Math.max(0, rawMonthlyCashFlow);
   const cashFlowLow = monthlyCashFlow * (1 - config.cashFlowRangeFactor);
   const cashFlowHigh = monthlyCashFlow * (1 + config.cashFlowRangeFactor);
 
@@ -63,7 +69,7 @@ export function calculateCashWithFicoAdjusted(
   } else if (grossCashOut < config.edgeCaseThresholds.minCashOutDollars) {
     edgeCases.push('LOW_CASH_OUT_UNDER_10K');
   }
-  if (monthlyCashFlow <= 0) {
+  if (rawMonthlyCashFlow <= 0) {
     edgeCases.push('TIGHT_OR_NEGATIVE_CASH_FLOW');
   }
 
