@@ -26,6 +26,16 @@ export const FormStepsSchema = z.object({
       .min(6),
     offStateExitCopy: z.string(),
   }),
+  ownership: z.object({
+    headline: z.string(),
+    subcopy: z.string(),
+    ownLabel: z.string(),
+    ownSublabel: z.string(),
+    dontOwnLabel: z.string(),
+    dontOwnSublabel: z.string(),
+    kickoutHeadline: z.string(),
+    kickoutBody: z.string(),
+  }),
   q1PropertyType: z.object({
     headline: z.string(),
     options: z

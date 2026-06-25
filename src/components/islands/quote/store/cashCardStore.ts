@@ -19,17 +19,23 @@ import type {
 export type StepKey =
   | 'state'
   | 'q1'
+  | 'ownership'
   | 'q2'
   | 'q3'
   | 'q4'
   | 'q5'
   | 'reveal'
   | 'contact'
-  | 'success';
+  | 'success'
+  // Terminal kick-out for non-owners. Intentionally NOT in STEP_ORDER so
+  // next()/back() can never land on it — it's reached only via an explicit
+  // setStep('kickout') and is a dead-end (no contact capture).
+  | 'kickout';
 
 export const STEP_ORDER: StepKey[] = [
   'q1',
   'state',
+  'ownership',
   'q2',
   'q3',
   'q4',
@@ -58,6 +64,9 @@ export type CashCardFormState = {
   state: string | null;
   // Q1
   propertyType: PropertyType | null;
+  // Ownership gate — true = owns the property (continues), false = does not
+  // (kicked out), null = not yet answered.
+  ownsProperty: boolean | null;
   // Q2
   propertyValue: number | null;
   // Q3
@@ -96,6 +105,7 @@ const initialState: CashCardFormState = {
   direction: 'forward',
   state: null,
   propertyType: null,
+  ownsProperty: null,
   propertyValue: null,
   currentBalance: null,
   monthlyRent: null,
@@ -151,6 +161,7 @@ if (typeof window !== 'undefined') {
 const TOUCH_FIELDS: ReadonlyArray<keyof CashCardFormState> = [
   'state',
   'propertyType',
+  'ownsProperty',
   'propertyValue',
   'currentBalance',
   'monthlyRent',
@@ -194,6 +205,20 @@ export const cashCardActions = {
   },
   setPropertyType(propertyType: PropertyType) {
     patch({ propertyType });
+  },
+  /**
+   * Ownership gate. Owners advance to the next step (q2). Non-owners are
+   * routed to the terminal 'kickout' screen and NO contact info is captured
+   * (hard kick-out, by product decision — keeps the lead list to people who
+   * actually hold a rental we can refinance).
+   */
+  setOwnership(ownsProperty: boolean) {
+    if (ownsProperty) {
+      patch({ ownsProperty });
+      cashCardActions.next();
+    } else {
+      patch({ ownsProperty, step: 'kickout', direction: 'forward' });
+    }
   },
   setPropertyValue(propertyValue: number) {
     // If the new property value is below the current balance, snap balance down

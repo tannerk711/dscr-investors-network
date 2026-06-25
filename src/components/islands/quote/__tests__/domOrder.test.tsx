@@ -41,13 +41,13 @@ describe('Quote form: DOM order — reveal precedes contact', () => {
     });
     expect(estimateHeading).toBeTruthy();
 
-    // The CTA to get an exact quote must be visible.
-    const quoteCta = screen.getByRole('button', { name: /Want An Exact Quote/i });
+    // The CTA to move toward qualification must be visible.
+    const quoteCta = screen.getByRole('button', { name: /See If I Qualify/i });
     expect(quoteCta).toBeTruthy();
 
     // The contact submit button MUST NOT exist yet.
     const submitButton = screen.queryByRole('button', {
-      name: /I Want Exact Numbers/i,
+      name: /Get Me Qualified/i,
     });
     expect(submitButton).toBeNull();
 
@@ -73,7 +73,7 @@ describe('Quote form: DOM order — reveal precedes contact', () => {
 
     // The contact submit + every contact input must now be present.
     expect(
-      screen.getByRole('button', { name: /I Want Exact Numbers/i })
+      screen.getByRole('button', { name: /Get Me Qualified/i })
     ).toBeTruthy();
     expect(screen.getByLabelText(/First name/i)).toBeTruthy();
     expect(screen.getByLabelText(/Last name/i)).toBeTruthy();
@@ -97,6 +97,37 @@ describe('Quote form: DOM order — reveal precedes contact', () => {
     expect(cashCardStore.get().step).toBe('reveal');
     cashCardActions.next();
     expect(cashCardStore.get().step).toBe('contact');
+  });
+
+  it('ownership gate sits between state and q2 in STEP_ORDER', async () => {
+    const { STEP_ORDER } = await import('../store/cashCardStore');
+    const stateIdx = STEP_ORDER.indexOf('state');
+    const ownershipIdx = STEP_ORDER.indexOf('ownership');
+    const q2Idx = STEP_ORDER.indexOf('q2');
+    expect(stateIdx).toBeLessThan(ownershipIdx);
+    expect(ownershipIdx).toBeLessThan(q2Idx);
+  });
+
+  it('owner answer advances past the ownership gate', () => {
+    cashCardActions.reset();
+    cashCardActions.setStep('ownership');
+    cashCardActions.setOwnership(true);
+    // next() from ownership lands on q2
+    expect(cashCardStore.get().step).toBe('q2');
+    expect(cashCardStore.get().ownsProperty).toBe(true);
+  });
+
+  it('non-owner answer hard-kicks to the dead-end (no contact capture)', () => {
+    cashCardActions.reset();
+    cashCardActions.setStep('ownership');
+    cashCardActions.setOwnership(false);
+    expect(cashCardStore.get().step).toBe('kickout');
+    expect(cashCardStore.get().ownsProperty).toBe(false);
+  });
+
+  it('kickout is NOT in STEP_ORDER (unreachable via next/back)', async () => {
+    const { STEP_ORDER } = await import('../store/cashCardStore');
+    expect(STEP_ORDER.indexOf('kickout')).toBe(-1);
   });
 
   it('ResumeToast does NOT render when lastTouchedAt is null (empty resume)', () => {

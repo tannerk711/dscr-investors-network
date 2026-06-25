@@ -15,6 +15,16 @@
     ],
     "offStateExitCopy": "We're not funding deals in your state right now. Drop your email and we'll let you know when we open it up."
   },
+  "ownership": {
+    "headline": "Do you already own this property?",
+    "subcopy": "A cash-out refinance pulls equity from a rental you already own. This is for properties you hold, not ones you're looking to buy.",
+    "ownLabel": "Yes, I own it",
+    "ownSublabel": "It's a rental I hold today",
+    "dontOwnLabel": "No, not yet",
+    "dontOwnSublabel": "I'm looking to buy or it's where I live",
+    "kickoutHeadline": "This one's built for properties you already own.",
+    "kickoutBody": "Our cash-out program pulls equity out of a rental you currently hold. It's not a purchase loan and it's not for a primary residence. If you buy an investment property down the road and want to pull cash from it, come back and run your numbers then."
+  },
   "q1PropertyType": {
     "headline": "What kind of property is it?",
     "options": [
@@ -67,8 +77,8 @@
     "cashFlowLineLabel": "new cash flow after the loan",
     "timelineLine": "~15 business days from yes to wired",
     "asterisk": "That is an estimate to be confirmed. Numbers vary off of credit, loan amount, and property taxes.",
-    "ctaLabel": "Want An Exact Quote?",
-    "ctaSubline": "This is the cash we think you can pull out of this property and put toward your next deal. Want your firm numbers? Tell us a bit more."
+    "ctaLabel": "See If I Qualify",
+    "ctaSubline": "This ball park estimate is based on what you told us. Want us to run numbers and see what you actually qualify for?"
   },
   "contact": {
     "headline": "What's the best way to reach you?",
@@ -79,7 +89,7 @@
       "email": "Email",
       "address": "Property address (optional)"
     },
-    "microcopy": "A DSCR specialist from our team will reach out shortly to answer any questions you have, and if you're interested, see how we can help you get financing.",
-    "submitLabel": "I Want Exact Numbers"
+    "microcopy": "We'll answer any questions you have, get you pricing on what you qualify for, and if it makes sense, help you get financing.",
+    "submitLabel": "Get Me Qualified"
   }
 }

@@ -13,6 +13,8 @@ import { CashCardPreview } from './CashCardPreview';
 import { ResumeToast } from './ResumeToast';
 import { firePixelEvent, cashMidpoint } from './pixel';
 import { Step0State } from './steps/Step0State';
+import { StepOwnership } from './steps/StepOwnership';
+import { StepKickout } from './steps/StepKickout';
 import { Step1PropertyType } from './steps/Step1PropertyType';
 import { Step2PropertyValue } from './steps/Step2PropertyValue';
 import { Step3LoanBalance } from './steps/Step3LoanBalance';
@@ -64,7 +66,15 @@ const slideVariants = {
 const STEP_TRANSITION = { duration: 0.26, ease: [0.25, 0.46, 0.45, 0.94] } as const;
 const STEP_TRANSITION_REDUCED = { duration: 0.15, ease: 'linear' } as const;
 
-const FORM_QUESTION_STEPS: StepKey[] = ['q1', 'state', 'q2', 'q3', 'q4', 'q5'];
+const FORM_QUESTION_STEPS: StepKey[] = [
+  'q1',
+  'state',
+  'ownership',
+  'q2',
+  'q3',
+  'q4',
+  'q5',
+];
 
 function ProgressDots({ current }: { current: StepKey }) {
   const idx = FORM_QUESTION_STEPS.indexOf(current);
@@ -92,8 +102,10 @@ function ProgressDots({ current }: { current: StepKey }) {
 
 function BackButton({ current }: { current: StepKey }) {
   const idx = STEP_ORDER.indexOf(current);
-  // Hide on first step, on success, and on reveal (the reveal's CTA is the only forward path)
-  if (idx <= 0 || current === 'success' || current === 'reveal') return null;
+  // Hide on first step, on success, on reveal (the reveal's CTA is the only
+  // forward path), and on the kickout dead-end (it has its own "Start over").
+  if (idx <= 0 || current === 'success' || current === 'reveal' || current === 'kickout')
+    return null;
   return (
     <button
       type="button"
@@ -111,6 +123,10 @@ function StepRenderer({ step }: { step: StepKey }) {
   switch (step) {
     case 'state':
       return <Step0State />;
+    case 'ownership':
+      return <StepOwnership />;
+    case 'kickout':
+      return <StepKickout />;
     case 'q1':
       return <Step1PropertyType />;
     case 'q2':
